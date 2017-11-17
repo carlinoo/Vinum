@@ -1,7 +1,5 @@
 <?php
 
-  model('category');
-
   class Book extends Application {
     public $id;
     public $ISBN;
@@ -23,7 +21,7 @@
         $this->author = $arr['author'];
         $this->edition = (int)$arr['edition'];
         $this->year = (int)$arr['year'];
-        $this->category = array_key_exists('category_id', $arr) ? Category::find((int)$arr['category_id']) : null;
+        // $this->category = array_key_exists('category_id', $arr) ? Category::find((int)$arr['category_id']) : null;
         $this->category_id = array_key_exists('category_id', $arr) ? (int)$arr['category_id'] : null;
         $this->reserved = array_key_exists('reserved', $arr) ? (boolean)$arr['reserved'] : null;
       }
@@ -44,7 +42,7 @@
     }
 
 
-    
+
   }
 
  ?>

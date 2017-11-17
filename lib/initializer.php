@@ -11,7 +11,7 @@
 
 
     // This function will generate the entire app
-    function render() {
+    function initiate() {
       $app = new App();
     }
 

@@ -15,9 +15,10 @@
       // Check if the controller file exists
       if (file_exists('app/controllers/' . $url[0] . '_controller.php')) {
         $this->controller = $url[0];
-        $_GET['controller'] = $url[0];
         unset($url[0]);
       }
+
+      $_GET['controller'] = $this->controller;
 
       // Check if the model file exists
       if (file_exists('app/models/' . $this->controller . '.php')) {
@@ -35,10 +36,11 @@
       if (isset($url[1])) {
         if (method_exists($this->controller, $url[1])) {
           $this->action = $url[1];
-          $_GET['action'] = $url[1];
           unset($url[1]);
         }
       }
+
+      $_GET['action'] = $this->action;
 
       // Now we check if there are any params, and if there are, add them to the array $params
       $this->params = $url ? array_values($url) : [];
