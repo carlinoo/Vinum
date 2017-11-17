@@ -1,0 +1,68 @@
+.btn-large {
+  margin-bottom: 10px !important;
+  margin-top: 10px !important;
+}
+
+.page-footer {
+  padding: 0px !important;
+
+}
+
+.brand-logo img {
+  height: 100% !important;
+}
+
+.brand-logo {
+  height: 100% !important;
+}
+
+.search-card, .select-card {
+  background-color: #F76D74 !important;
+  margin-top: 20px;
+}
+
+#search_input, #category {
+  background-color: #F76D74 !important;
+  border: 0;
+  height: 40px;
+  padding-left: 5px;
+  color: white;
+  font-size: 22px;
+}
+
+#search_input {
+  width: calc(100% - 33px) !important;
+}
+
+#search_button {
+  background-color: #F76D74;
+  color: white;
+  border: 0;
+  width: 33px;
+  height: 40px;
+}
+
+
+.book-card {
+  background-color: rgba(245 ,220, 220, 1);
+  color: black !important;
+}
+
+.book-card .btn-flat {
+  margin-right: 0px !important;
+  color: grey !important;
+  padding: 0 !important;
+}
+
+.not-clickable {
+  cursor: not-allowed !important;
+}
+
+.clickable {
+  cursor: pointer !important;
+}
+
+
+.disabled {
+  cursor: not-allowed;
+}
