@@ -5,6 +5,18 @@
         "home/index",
         "root"
       ]
+    },
+    {
+      "/book/show/:id": [
+        "book/display",
+        "my_book"
+      ]
+    },
+    {
+      "/book/index": [
+        "book/index",
+        "all_books"
+      ]
     }
   ],
   "POST": [
@@ -12,12 +24,6 @@
       "/get_json": [
         "book/json",
         "get_json"
-      ]
-    },
-    {
-      "/book/show/:id": [
-        "book/display",
-        "my_book"
       ]
     }
   ],
