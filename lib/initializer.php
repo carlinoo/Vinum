@@ -76,6 +76,40 @@
     }
 
 
+    // This function will create varaibles from the config/routes.json that will have the path for that controller and action
+    function set_path_variables() {
+      if (!file_exists('config/routes.json')) {
+        echo "Could not find config/routes/json";
+        return;
+      }
+
+      // We get the content of the JSON file
+      $str = file_get_contents('config/routes.json');
+      $json = json_decode($str, true);
+
+      // We loop through all routes and create a function that will return the path of a route
+      foreach ($json as $request_method => $routes) {
+        foreach ($routes as $route) {
+          foreach ($route as $key => $value) {
+            // If the key has a '/' before, delete it
+            if ($key[0] === '/') {
+              $key[0] = '';
+              $key = trim($key);
+            }
+
+            // If the route doesnt specify a function name then continue
+            if (!isset($value[1])) {
+              continue;
+            }
+
+            define($value[1] . '_path', $_ENV['root_dir'] . $key);
+
+          }
+        }
+      }
+    }
+
+
     // This function will return wheather a user is signed in
     function user_signed_in() {
       model('user');

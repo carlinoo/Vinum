@@ -45,6 +45,10 @@
       // Now we check if there are any params, and if there are, add them to the array $params
       $this->params = $url ? array_values($url) : [];
 
+
+      // We set the path variables globally
+      set_path_variables();
+
       // We call the controller, with its action and its params
       call_user_func_array([$this->controller, $this->action], $this->params);
     }

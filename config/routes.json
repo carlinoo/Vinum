@@ -1,5 +1,22 @@
 {
-  "get": [
-    ""
+  "GET": [
+    {
+      "/": [
+        "home/index",
+        "root"
+      ]
+    }
+  ],
+  "POST": [
+
+  ],
+  "UPDATE": [
+
+  ],
+  "PATCH": [
+
+  ],
+  "DELETE": [
+
   ]
 }
