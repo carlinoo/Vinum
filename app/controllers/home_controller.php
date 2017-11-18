@@ -6,6 +6,7 @@
       model('book');
       //echo json_encode(Book::all());
       //var_dump($GLOBALS);
+      echo "default page";
     }
   }
 

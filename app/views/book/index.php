@@ -11,19 +11,3 @@ send_ajax('POST', '/Vinum/book/json', null, function(data) {
 });
 
 </script>
-
-
-
-
-<?php
- $arr = [];
- $arr[0] = 'get_json';
-
-var_dump(get_route($arr)); ?>
-
-<br><br><br>
-
-
-<?php
-
- ?>

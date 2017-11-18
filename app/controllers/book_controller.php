@@ -11,8 +11,12 @@
     }
 
     function display($id) {
-      echo "book/display";
-      echo "/$id";
+
+      echo "<br><br>";
+      // var_dump($_GET);
+
+      echo "<br><br>";
+
     }
   }
 

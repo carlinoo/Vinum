@@ -102,6 +102,9 @@
               continue;
             }
 
+            // We get rid of anything after the /:example
+            $key = strstr($key, '/:', true);
+
             define($value[1] . '_path', $_ENV['root_dir'] . $key);
 
           }
@@ -112,7 +115,7 @@
 
 
 
-    // This function will return the route a link that has been exploded
+    // This function will return the route of the link that has been exploded
     // $url looks something like this:
     // array(3) { [0]=> string(4) "book" [1]=> string(5) "show" [2]=> string(2) "12" }
     function get_route($url) {
@@ -150,6 +153,8 @@
               continue;
             }
 
+
+            // Loop through all values, and check if the routes match. If they do, return it
             for ($i = 0; $i < count($url); $i++) {
               // var_dump($exploded_values);
               if ($exploded_values[$i][0] === ':') {
@@ -166,6 +171,8 @@
           }
         }
       }
+
+      return NULL;
     }
 
 
