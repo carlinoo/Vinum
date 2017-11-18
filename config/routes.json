@@ -8,7 +8,12 @@
     }
   ],
   "POST": [
-
+    {
+      "/get_json": [
+        "book/json",
+        "get_json"
+      ]
+    }
   ],
   "UPDATE": [
 
