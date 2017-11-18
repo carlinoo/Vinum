@@ -110,6 +110,65 @@
     }
 
 
+
+
+    // This function will return the route a link that has been exploded
+    // $url looks something like this:
+    // array(3) { [0]=> string(4) "book" [1]=> string(5) "show" [2]=> string(2) "12" }
+    function get_route($url) {
+      if (!file_exists('config/routes.json')) {
+        echo "Could not find config/routes/json";
+        return;
+      }
+
+      // We get the content of the JSON file
+      $str = file_get_contents('config/routes.json');
+      $json = json_decode($str, true);
+
+      // Loop through all the routes
+      foreach ($json as $request_method => $routes) {
+        foreach ($routes as $route) {
+          foreach ($route as $key => $value) {
+
+            // If the route doesnt specify a route then throw an error
+            if (!isset($value[0])) {
+              throw new Exception("Route $key needs to have a controller and action", 1);
+              exit();
+              return;
+            }
+
+            // Get all the sub links of the route separated by '/' and delete all empty values
+            $exploded_values = array_values(array_filter(explode('/', $key)));
+
+            if (empty($exploded_values)) {
+              continue;
+            }
+
+
+            // The $url needs to be the same size as $exploded_values
+            if (count($url) !== count($exploded_values)) {
+              continue;
+            }
+
+            for ($i = 0; $i < count($url); $i++) {
+              // var_dump($exploded_values);
+              if ($exploded_values[$i][0] === ':') {
+                unset($exploded_values[$i]);
+                continue;
+              }
+
+              if ($exploded_values[$i] !== $url[$i]) {
+                continue 2;
+              }
+            }
+
+            return $value[0];
+          }
+        }
+      }
+    }
+
+
     // This function will return wheather a user is signed in
     function user_signed_in() {
       model('user');

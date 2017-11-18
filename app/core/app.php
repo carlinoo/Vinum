@@ -57,9 +57,27 @@
     // This function will get all the paramaters of the url of the type /param1/param2/param3... etc
     // and it will return them
     private function parseURL() {
-      if (isset($_GET['url'])) {
-        return $url = explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
+      if (!isset($_GET['url'])) {
+        return NULL;
       }
+
+      // We explode the values of the $url
+      $route = explode('/', filter_var(rtrim($_GET['url'], '/'), FILTER_SANITIZE_URL));
+
+      // We get the route, and we explode it and we filter the empty values
+      $routes = array_values(array_filter(explode('/', get_route($route))));
+
+      // Check if the route is empty
+      if (empty($routes)) {
+        return NULL;
+      }
+
+      // We add the parameters to the array that are located in the $route[] starting from the 3rd element
+      for ($i = 2; $i < count($route); $i++) {
+        array_push($routes, $route[$i]);
+      }
+
+      return $routes;
     }
   }
 

@@ -1,9 +1,8 @@
 
-This is book/index
 <br><br><br>
 <script>
 //
-send_ajax('POST', '/~mac/Vinum/book/json', null, function(data) {
+send_ajax('POST', '/Vinum/book/json', null, function(data) {
   console.log("SUCESS");
   console.log(data);
 }, function(data){
@@ -13,6 +12,18 @@ send_ajax('POST', '/~mac/Vinum/book/json', null, function(data) {
 
 </script>
 
-<?php echo get_json_path; ?>
+
+
+
+<?php
+ $arr = [];
+ $arr[0] = 'get_json';
+
+var_dump(get_route($arr)); ?>
 
 <br><br><br>
+
+
+<?php
+
+ ?>

@@ -13,6 +13,12 @@
         "book/json",
         "get_json"
       ]
+    },
+    {
+      "/book/show/:id": [
+        "book/display",
+        "my_book"
+      ]
     }
   ],
   "UPDATE": [
