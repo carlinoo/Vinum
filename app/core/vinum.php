@@ -19,11 +19,12 @@
           $class = ucfirst($obj);
 
           if (class_exists($class)) {
-            $this->$obj = $class::find($value);            
+            $this->$obj = $class::find($value);
           }
         }
       }
     }
+
 
     // this class method will get all the objects of a table called from the child and return them
     public static function all() {

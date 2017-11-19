@@ -72,6 +72,7 @@
         return NULL;
       }
 
+
       // We add the parameters to the array that are located in the $route[] starting from the 3rd element
       for ($i = 2; $i < count($route); $i++) {
         array_push($routes, $route[$i]);
