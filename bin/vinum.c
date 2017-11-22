@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <time.h>
 
 
 
@@ -29,6 +31,7 @@
 void print_vinum(void);
 void display_help_menu(void);
 void display_routes(void);
+void migrate_database(void);
 void display_version(void);
 void display_not_available(void);
 void not_found(void);
@@ -72,7 +75,7 @@ int main(int argc, char *argv[]) {
 
   // If they want to migrate the Database
   if (argc > 1 && (strcmp(argv[1], "db:migrate") == 0)) {
-    display_not_available();
+    migrate_database();
     return 0;
   }
 
@@ -224,14 +227,24 @@ void generations(int argc, char *argv[]) {
 
 // This will generate a migration
 void generate_migration(char *name) {
+  time_t now;
+  // Get current time and convert to string
+  time(&now);
+  char str[12];
+  sprintf(str, "%ld", now);
+
   FILE *fp;
   char filename[400];
   char file_location[450] = MIGRATION_FOLDER;
 
   // Get the name file, add "-migration.sql" to the end of it, and add it to the location of it
-  strcpy(filename, name);
+  strcpy(filename, str);
+  strcat(filename, "-");
+  strcat(filename, name);
   strcat(filename, "-migration.sql");
   strcat(file_location, filename);
+
+  printf("%s\n", file_location);
 
   fp = fopen(file_location, "r");
 
@@ -269,12 +282,12 @@ void generate_controller(char *name) {
   FILE *fp;
   char file_location[400] = MODEL_FOLDER;
   char controller_name[300];
-
-  // First capital letter
-  strcpy(controller_name, toupper(name[0]));
-
-  // add the rest of letters
-  // TODO not finished
+  //
+  // // First capital letter
+  // strcpy(controller_name, toupper(name[0]));
+  //
+  // // add the rest of letters
+  // // TODO not finished
 
   strcat(file_location, name);
   strcat(file_location, "_controller.php");
@@ -329,4 +342,17 @@ void generate_resource(char *name) {
   printf("%s\n", filename);
 
   // fp = fopen(concat)
+}
+
+
+
+// This function will migrate the database
+void migrate_database() {
+  char *cmd = "php";
+  char *argv[3];
+  argv[0] = "php";
+  argv[1] = "db/migrate.php";
+  argv[2] = NULL;
+
+  execvp(cmd, argv);
 }
