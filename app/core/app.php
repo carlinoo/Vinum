@@ -42,6 +42,7 @@
 
       $_GET['action'] = $this->action;
 
+
       // Now we check if there are any params, and if there are, add them to the array $params
       $this->params = $url ? array_values($url) : [];
 
@@ -50,7 +51,8 @@
       set_path_variables();
 
       // We call the controller, with its action and its params
-      call_user_func_array([$this->controller, $this->action], $this->params);
+      // We add '_action' to the end of the method so that the __call magic method is called
+      call_user_func_array([$this->controller, $this->action . '_action'], $this->params);
     }
 
 

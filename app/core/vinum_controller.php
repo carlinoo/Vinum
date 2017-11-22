@@ -2,7 +2,7 @@
   // This is the very initial controller
   class VinumController {
     // This action will render a view passed as a parameter
-    protected function render() {
+    protected static function render() {
       $number_of_args = func_num_args();
 
       if ($number_of_args == 0 || func_get_arg(0) === 'view') {
@@ -37,6 +37,33 @@
       }
 
     } // end render()
+
+
+
+
+    // This method will be called before a method is called
+    public function __call($method, $argv) {
+      // we take away '_action' from the method
+      $actual_method = substr($method, 0, -7);
+
+      if (method_exists($this, $method)) {
+        return;
+      }
+
+      // Call the before_action method, then the actual action and finally the after_action
+      if (method_exists($this, 'before_action')) {
+        self::before_action();
+      }
+
+      call_user_func_array([$this, $actual_method], $argv);
+
+      if (method_exists($this, 'after_action')) {
+        self::after_action();
+      }
+    }
+
+
+
 
     protected function no_render() {
       header('Location: index.php');
