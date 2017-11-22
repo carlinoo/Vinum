@@ -17,6 +17,8 @@
 // Define the location of the vinum executable
 #define EXECLOC "config/routes.json"
 #define MIGRATION_FOLDER "db/migrations/"
+#define CONTROLLER_FOLDER "app/controllers/"
+#define MODEL_FOLDER "app/models/"
 
 // Other Constants
 #define BUFFER_SIZE 5000
@@ -264,11 +266,45 @@ void generate_migration(char *name) {
 
 // This will generate a controller
 void generate_controller(char *name) {
-  FILE fp;
-  char *filename = strcat(name, "-migration.sql");
+  FILE *fp;
+  char file_location[400] = MODEL_FOLDER;
+  char controller_name[300];
 
-  printf("%s\n", filename);
+  // First capital letter
+  strcpy(controller_name, toupper(name[0]));
 
+  // add the rest of letters
+  // TODO not finished
+
+  strcat(file_location, name);
+  strcat(file_location, "_controller.php");
+
+  fp = fopen(file_location, "r");
+
+  // If the file does exist, then output an error
+  if (fp != NULL) {
+    printf("\n%sERROR:%s A controller with the name of '%s%s%s' already exists.\n\n", KRED, KNORMAL, KYELLOW, name, KNORMAL);
+    return;
+  }
+
+
+  // Create the file
+  fp = fopen(file_location, "a+");
+
+  // If there has been a problem
+  if (fp == NULL) {
+    printf("\n%sERROR:%s There's has been an error creating your controller file.\n\n", KRED, KNORMAL);
+    return;
+  }
+
+  // Add a comment to the file and close it
+  fputs("<?php\n\nclass ", fp);
+  fclose(fp);
+
+
+  // Display the information of the file we just created
+  print_vinum();
+  printf("A migration file has been created: '%s%s%s'. Add your SQL statements and then do '%svinum db:migrate%s' to migrate the database.\n\n", KYELLOW, file_location, KNORMAL, KYELLOW, KNORMAL);
   // fp = fopen(concat)
 }
 
