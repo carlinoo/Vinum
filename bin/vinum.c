@@ -16,6 +16,7 @@
 
 // Define the location of the vinum executable
 #define EXECLOC "config/routes.json"
+#define MIGRATION_FOLDER "db/migrations/"
 
 // Other Constants
 #define BUFFER_SIZE 5000
@@ -34,7 +35,6 @@ void generate_controller(char*);
 void generate_model(char*);
 void generate_resource(char*);
 void generate_migration(char*);
-void generate_view(char*, char*);
 
 
 
@@ -115,8 +115,8 @@ void display_help_menu() {
   printf("\t'%svinum generate controller [CONTROLLER_NAME]%s'\n", KYELLOW, KNORMAL);
   printf("\n%sGenerate a new Model:\n", KNORMAL);
   printf("\t'%svinum generate model [MODEL_NAME]%s'\n", KYELLOW, KNORMAL);
-  printf("\n%sGenerate a new View:\n", KNORMAL);
-  printf("\t'%svinum generate view [VIEW_NAME]%s'\n", KYELLOW, KNORMAL);
+  // printf("\n%sGenerate a new View:\n", KNORMAL);
+  // printf("\t'%svinum generate view [VIEW_NAME]%s'\n", KYELLOW, KNORMAL);
   printf("\n%sGenerate a new Resource:\n", KNORMAL);
   printf("\t'%svinum generate resource [RESOURCE_NAME]%s'\n", KYELLOW, KNORMAL);
   printf("\n%sGenerate a new Migration:\n", KNORMAL);
@@ -213,4 +213,84 @@ void generations(int argc, char *argv[]) {
     generate_migration(argv[3]);
     return;
   }
+
+
+  printf("\n%sERROR:%s We could not find what kind of generation you would like to do.\n\n", KRED, KNORMAL);
+}
+
+
+
+// This will generate a migration
+void generate_migration(char *name) {
+  FILE *fp;
+  char filename[400];
+  char file_location[450] = MIGRATION_FOLDER;
+
+  // Get the name file, add "-migration.sql" to the end of it, and add it to the location of it
+  strcpy(filename, name);
+  strcat(filename, "-migration.sql");
+  strcat(file_location, filename);
+
+  fp = fopen(file_location, "r");
+
+  // If the file does exist, then output an error
+  if (fp != NULL) {
+    printf("\n%sERROR:%s A migration with the name of '%s%s%s' already exists.\n\n", KRED, KNORMAL, KYELLOW, name, KNORMAL);
+    return;
+  }
+
+
+  // Create the file
+  fp = fopen(file_location, "a+");
+
+  // If there has been a problem
+  if (fp == NULL) {
+    printf("\n%sERROR:%s There's has been an error creating your migration file.\n\n", KRED, KNORMAL);
+    return;
+  }
+
+  // Add a comment to the file and close it
+  fputs("/* This migration needs to contain all the SQL statements of the changes you want to do */", fp);
+  fclose(fp);
+
+
+  // Display the information of the file we just created
+  print_vinum();
+  printf("A migration file has been created: '%s%s%s'. Add your SQL statements and then do '%svinum db:migrate%s' to migrate the database.\n\n", KYELLOW, file_location, KNORMAL, KYELLOW, KNORMAL);
+
+}
+
+
+
+// This will generate a controller
+void generate_controller(char *name) {
+  FILE fp;
+  char *filename = strcat(name, "-migration.sql");
+
+  printf("%s\n", filename);
+
+  // fp = fopen(concat)
+}
+
+
+// This will generate a model
+void generate_model(char *name) {
+  FILE fp;
+  char *filename = strcat(name, "-migration.sql");
+
+  printf("%s\n", filename);
+
+  // fp = fopen(concat)
+}
+
+
+
+// This will generate a resource
+void generate_resource(char *name) {
+  FILE fp;
+  char *filename = strcat(name, "-migration.sql");
+
+  printf("%s\n", filename);
+
+  // fp = fopen(concat)
 }
