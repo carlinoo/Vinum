@@ -20,11 +20,22 @@
 // Other Constants
 #define BUFFER_SIZE 5000
 #define MAX_TOKEN_COUNT 128
+#define VERSION "0.0.1"
 
-// Functions prototypes
+// Function prototypes
 void print_vinum(void);
 void display_help_menu(void);
 void display_routes(void);
+void display_version(void);
+void display_not_available(void);
+void not_found(void);
+void generations(int, char*[]);
+void generate_controller(char*);
+void generate_model(char*);
+void generate_resource(char*);
+void generate_migration(char*);
+void generate_view(char*, char*);
+
 
 
 int main(int argc, char *argv[]) {
@@ -44,12 +55,45 @@ int main(int argc, char *argv[]) {
     return 0;
   }
 
-  // If the user want to see al the routes
-  if (argc > 1 && strcmp(argv[1], "routes") == 0) {
+  // If the users want to see al the routes
+  if (argc > 1 && (strcmp(argv[1], "routes") == 0 || strcmp(argv[1], "r") == 0)) {
     display_routes();
     return 0;
   }
 
+  // If the user wants to see the version
+  if (argc > 1 && (strcmp(argv[1], "--version") == 0 || strcmp(argv[1], "--v") == 0)) {
+    display_version();
+    return 0;
+  }
+
+
+  // If they want to migrate the Database
+  if (argc > 1 && (strcmp(argv[1], "db:migrate") == 0)) {
+    display_not_available();
+    return 0;
+  }
+
+
+
+  // If they are trying to generate something
+  if (argc > 2 && (strcmp(argv[1], "generate") == 0 || strcmp(argv[1], "g") == 0)) {
+    generations(argc, argv);
+
+    return 0;
+  }
+
+
+  // If the user wants to create a new application
+  if (argc == 3 && strcmp(argv[1], "new") == 0) {
+    display_not_available();
+
+    return 0;
+  }
+
+
+  // If they try to to look for something not shown on the list above, then show a little message, then show the list of options and quit
+  not_found();
   return 0;
 }
 
@@ -111,5 +155,62 @@ void display_routes() {
     if (c == '{') {
 
     }
+  }
+}
+
+
+
+
+
+// This function will display the version of the system
+void display_version() {
+  print_vinum();
+  printf("Version %s%s\n\n", KRED, VERSION);
+}
+
+
+
+
+// This function will display that a feature is not yet implemented
+void display_not_available() {
+  print_vinum();
+  printf("This feature is not implemented yet.\n\n");
+}
+
+
+
+// This will show the menu of not found
+void not_found() {
+  printf("\n\n%sERROR: We could not understand what you are trying to do. See the commands below that you can use:%s\n", KRED, KNORMAL);
+  display_help_menu();
+}
+
+
+
+// This function will generate whatever the user wants. We will be apssing the arguments
+void generations(int argc, char *argv[]) {
+  // If they want to generate a controller
+  if (argc == 4 && strcmp(argv[2], "controller") == 0) {
+    generate_controller(argv[3]);
+    return;
+  }
+
+
+  // If they want to generate a model
+  if (argc == 4 && strcmp(argv[2], "model") == 0) {
+    generate_model(argv[3]);
+    return;
+  }
+
+  // If they want to generate a resource
+  if (argc > 3 && strcmp(argv[2], "resource") == 0) {
+    generate_resource(argv[3]);
+    return;
+  }
+
+  // If they want to generate a migration
+  if (argc == 4 && strcmp(argv[2], "migration") == 0) {
+    generate_migration(argv[3]);
+    return;
   }
 }
