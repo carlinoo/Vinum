@@ -5,11 +5,10 @@
   // This is the ApplicationController from which the rest of controllers will inherit from
   class ApplicationController extends VinumController {
 
-    // Nothing cannot be seeing by guests except home and the user login
+    // Anthing you put here will be executed before anything else
     public function __construct() {
       // self::user_restricted_only();
     }
-
 
   }
 
