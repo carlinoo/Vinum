@@ -42,7 +42,7 @@ Now you are ready to start developing. You need first to migrate the database. T
 
 
 ### Useful commands
-There are a few commands you will need to get familar with in order to develop things faster. If you are familiar with *Ruby on Rails* you will notice how similar they are. Note that some are not available at the moment, but will in future updates.
+There are a few commands you will need to get familiar with in order to develop things faster. If you are familiar with *Ruby on Rails* you will notice how similar they are. Note that some are not available at the moment, but will in future updates.
 
 ##### Actions
 To start a new app just do `bin/vinum new [APP_NAME]`. This will create a folder in the desired location wil the projects files.
@@ -87,8 +87,25 @@ In the `lib` folder you will have the following:
 
 In the `public` folder you will have all the Javascript, CSS, Fonts and Images needed for the project.
 
+### Convention
+Vinum makes development really easy, fast and easy if the development convention is followed. This is very similar to *Ruby on Rails* conventions.
+
+* **File names:** When creating a new object, let say Book for example, you will need to keep everything the same. This means calling the model `book.php`, the controller `book_controller.php`, the database table will be called `Book` and the view folder will be called `book`. Also, if you need a page to show all the books from the database and you call that action inside `book_controller.php` something like `all_books`, then you are recommended to call a file inside `app/views/book` called `all_books.php`.
+
+* **Database Primary Keys:** To make the development very fast, code readable and maintainable, you want to use a primary key for all database tables called `id`. This does not mean you cannot have more primary keys. 
+
+*  **Database Associations:** If the `Book` table has a category which references to a table called `Category`, then you will need the foreign key on the table `Book` table called `category_id`. This comes very handy when retrieving information about a model and all their associations as objects, instead of as just raw data.
 
 ### Migrations
 Migrations are the way to keep track of all the changes you have done to the database. This way, if you wipe the database by mistake, buy a new computer or work with multiple people on the same project, you will always have the same database structure. Every time you want a new table, change a column or any change, you will have to generate a new migration file via the command line, go to the new file generated and write your SQL code there. After you do so, you can do to the command like and migrate the database using `bin/vinum db:migrate`. 
 
 If everything is successful, you won't see any errors displayed on the screen and the changes will be made. Remember that every time you create a new model or resource, a new migration file will be created and you will need to create a table with the same name as the model.
+
+### Models
+The models are the classes of your applications. You will write any methods
+
+### Controllers
+
+### Views
+
+### Routes
