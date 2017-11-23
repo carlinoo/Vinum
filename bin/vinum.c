@@ -355,4 +355,6 @@ void migrate_database() {
   argv[2] = NULL;
 
   execvp(cmd, argv);
+
+  printf("\n\n");
 }
