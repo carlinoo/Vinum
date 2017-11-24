@@ -155,13 +155,102 @@ $book->destroy();
 $book->reserved = true;
 $book->save_record();
 
-
+// If a book has a category_id then this will retrieve the Category object
+$category = $book->category;
 ```
 
 ### Controllers
+Controllers are the 'middleware' between the user and the backend. They will talk to the model which will talk to the database and they will also interact with the user.  To read more about how the requests work, read more about Routes below.
+
+Let's take the example we were using above about a model called `Book`. We will need a controller called `book_controller.php`. This controller will look something like this:
+
+``` php
+<?php
+
+  class BookController extends ApplicationController {
+	
+	// Action to display all books
+    function index() {
+      $all_books = Book::all();
+
+      self::render();
+    }
+	
+	// Action to display all book in JSON format
+    function get_json_books() {
+	  $all_books = Book::all();
+      self::render('json', $all_books);
+    }
+
+	// Action to display a specific book
+    function display($id) {
+      $book = Book::find($id);
+
+      self::render();
+    }
+
+  }
+
+ ?>
+
+```
+
+Controllers are really powerful. Let say we have an action called `index` that will display all the books, you can get all the books and then at the very end of it you say `self::render();`. This will look for the file `app/views/book/index.php` where you can use the variable `$all_books` to display the information however you wish. Please read the Routes section below to understand how this system works.
+
+We also have a method called `get_json_books`. This is going to get all the books and then it will call the render function passing `'json'` as the first argument and the information we want to render as JSON as the second parameter (`$all_books`). This will need to be called at the end of the action, and it will display the information in JSON format without any view. This is generally useful when creating a project for an API or when using AJAX to request information.
+
+At the end we have the `display` action that takes and `id` as an argument. We can assume that when the user goes to `http://example.com/book/display/3` it will pass `3` as an argument. This is all done through the Routes (read more below). 
 
 ### Views
+Views are the way we display information. Then if we have a path like `app/views/book/index.php` will mean that we have a controller called `book_controller.php` with an action called `index`. Any variables declared on that action, can be used on the view. 
 
 ### Routes
+Routes are a very important part of the Vinum Framework. They route a request from a user to an action of a controller. This is a JSON file located in `config/routes.json`. It looks something like this:
+
+``` json
+{
+  "GET": [
+    {
+      "/": [
+        "home/index",
+        "root"
+      ]
+    },
+    {
+      "/book/show/:id": [
+        "book/display",
+        "my_book"
+      ]
+    },
+    {
+      "/book/index": [
+        "book/index",
+        "all_books"
+      ]
+    }
+  ],
+  "POST": [
+    {
+      "/get_json": [
+        "book/json",
+        "get_json"
+      ]
+    }
+  ],
+  "UPDATE": [
+
+  ],
+  "PATCH": [
+
+  ],
+  "DELETE": [
+
+  ]
+}
+```
+
+There are 5 ways to talk to the server. `GET, POST, UPDATE, PATCH and DELETE`. Inside each we have an array of all routes. Lets look at the first `"/book/show/:id"`. This one is located inside the `GET` array, so the HTTP Request will be of type `GET`. When a user types in `http://example.com/book/show/5` it will find first `"book/display"`. This means that it will send this request to the `book_controller.php` to the action `display` and will send the argument 	`5`. (See above the controller section for the same example). 
+
+Also, after `"book/display"` it says `"my_book"`. This will create a global variable called `my_book_path` that can be accessed everywhere and it will contain the location of that route i.e. `http://example.com/book/show`. These variables are very useful when trying to redirect users without having to remember the actual path of the request.
 
 ### Rendering Information
