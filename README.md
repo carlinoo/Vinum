@@ -97,15 +97,71 @@ Vinum makes development really easy, fast and easy if the development convention
 *  **Database Associations:** If the `Book` table has a category which references to a table called `Category`, then you will need the foreign key on the table `Book` table called `category_id`. This comes very handy when retrieving information about a model and all their associations as objects, instead of as just raw data.
 
 ### Migrations
-Migrations are the way to keep track of all the changes you have done to the database. This way, if you wipe the database by mistake, buy a new computer or work with multiple people on the same project, you will always have the same database structure. Every time you want a new table, change a column or any change, you will have to generate a new migration file via the command line, go to the new file generated and write your SQL code there. After you do so, you can do to the command like and migrate the database using `bin/vinum db:migrate`. 
+Migrations are the way to keep track of all the changes you have done to the database. This way, if you wipe the database by mistake, buy a new computer or work with multiple people on the same project, you will always have the same database structure. Every time you want a new table, change a column or any change, you will have to generate a new migration file via the command line, go to the new file generated and write your SQL code there. After you do so, you can go to the command like and migrate the database using `bin/vinum db:migrate`. 
 
 If everything is successful, you won't see any errors displayed on the screen and the changes will be made. Remember that every time you create a new model or resource, a new migration file will be created and you will need to create a table with the same name as the model.
 
 ### Models
-The models are the classes of your applications. You will write any methods
+The models are the classes of your applications. You will write any methods there to manipulate information or do any sort of stuff. The file will look something like this assuming you are creating a `Book` model.
+
+``` php
+<?php
+
+  class Book extends Application {
+    
+    // method to reserve a book
+    public function reserve() {
+	    $this->reserved = true;
+	    $this.save
+    }
+
+  }
+
+ ?>
+```
+All models will inherit from `Application`, which itself will inhert from `Vinum`. This is useful to give you certain functionality talked about below. If you want to add any generic methods to all models, you will do that in the `Application` model. 
+
+##### Methods
+I am going to assume there is model called `Book`. If you use the right convention talked about previously, you will get functionality like:
+``` php
+// Get all book objects from the database in an array
+$all_books = Book::all();
+
+// Get a specify book passing the id
+$book = Book::find(id);
+
+// Get books with certain conditions
+$books = Book::where("reserved = false");
+
+// Get the number of all Books in the database
+$number_of_books = Book::count();
+
+// Also, get the number of books with certain condition
+$number_of_reserved_books = Book::count("reserved = true");
+
+// To update attributes of a book object
+$book->update_attributes(array("reserved" => 1));
+
+// Get the last book
+$last_book = Book::last();
+
+// Get the first book
+$first_book = Book::first();
+
+// Delete a book from the database
+$book->destroy();
+
+// Save a new or updated object to the database
+$book->reserved = true;
+$book->save_record();
+
+
+```
 
 ### Controllers
 
 ### Views
 
 ### Routes
+
+### Rendering Information
