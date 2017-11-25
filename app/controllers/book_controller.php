@@ -4,12 +4,6 @@
 
     function index() {
       self::render();
-
-      $b = new Book(array("son" => "father",
-                          "category_id" => "1"));
-
-      var_dump($b);
-
     }
 
     function json() {
