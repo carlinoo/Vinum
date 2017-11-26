@@ -40,6 +40,7 @@ void generate_controller(char*);
 void generate_model(char*);
 void generate_resource(char*);
 void generate_migration(char*);
+void initilize(void);
 
 
 
@@ -90,12 +91,11 @@ int main(int argc, char *argv[]) {
 
 
   // If the user wants to create a new application
-  if (argc == 3 && strcmp(argv[1], "new") == 0) {
-    display_not_available();
+  if (argc > 1 && strcmp(argv[1], "init") == 0) {
+    initilize();
 
     return 0;
   }
-
 
   // If they try to to look for something not shown on the list above, then show a little message, then show the list of options and quit
   not_found();
@@ -348,6 +348,21 @@ void generate_resource(char *name) {
 
 // This function will migrate the database
 void migrate_database() {
+  char *cmd = "php";
+  char *argv[3];
+  argv[0] = "php";
+  argv[1] = "db/migrate.php";
+  argv[2] = NULL;
+
+  execvp(cmd, argv);
+
+  printf("\n\n");
+}
+
+
+
+
+void initilize() {
   char *cmd = "php";
   char *argv[3];
   argv[0] = "php";

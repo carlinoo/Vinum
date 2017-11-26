@@ -5,6 +5,13 @@
 
   $db = Db::connect();
 
+  // Check if database exists
+if (!isset($_ENV['database_name']) && $_ENV['database_name'] != '') {
+  echo "Please go to config/variables.php and create a database name";
+  return;
+}
+  $database_create = $db->prepare("CREATE DATABASE IF NOT EXISTS " . $_ENV['database_name']);
+  $database_create->execute();
 
   // Check if the table exists
   $table = $db->prepare("SELECT count(*) AS 'count' FROM information_schema.tables WHERE table_schema = 'RainbowBooks' AND table_name = 'vinum_info'");
