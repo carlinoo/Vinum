@@ -112,7 +112,7 @@ The models are the classes of your applications. You will write any methods ther
     // method to reserve a book
     public function reserve() {
 	    $this->reserved = true;
-	    $this.save
+	    $this.save_record
     }
 
   }
@@ -128,10 +128,13 @@ I am going to assume there is model called `Book`. If you use the right conventi
 $all_books = Book::all();
 
 // Get a specify book passing the id
-$book = Book::find(id);
+$book = Book::find($id);
 
 // Get books with certain conditions
 $books = Book::where("reserved = false");
+
+// Get books with certain conditions to avoid SQL Injections
+$books = Book::where("reserved = ? AND author = ?", "false", $author);
 
 // Get the number of all Books in the database
 $number_of_books = Book::count();
