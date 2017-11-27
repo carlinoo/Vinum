@@ -41,7 +41,6 @@
       foreach($results as $obj) {
         $item = new $class($obj);
         $all[] = $item;
-        //var_dump($item);
       }
 
       return $all;
@@ -67,7 +66,7 @@
       }
 
       $result = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $column . ' = :id');
-      $result->bindParam(':id', $id, PDO::PARAM_INT);
+      $result->bindParam(':id', $id);
 
       $result->execute();
 
@@ -84,13 +83,21 @@
 
 
 
-
     // This class method will return a list of objects retrieved from the database
-    public static function where($column = null) {
+    public static function where() {
+      // get all arguments
+      $number_of_args = func_num_args();
+      $argv = func_get_args();
 
+      if ($number_of_args < 1) {
+        throw new Exception("You need to pass at least two parameters", 1);
+        return null;
+      }
       $class = get_called_class();
       $db = DB::connect();
       $items = [];
+
+
 
       if ($condition == null) {
         return null;

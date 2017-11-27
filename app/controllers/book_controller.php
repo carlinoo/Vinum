@@ -3,6 +3,16 @@
   class BookController extends ApplicationController {
 
     function index() {
+      $book = Book::where();
+
+      try {
+        $book = Book::where();
+
+      } catch (Exception $e) {
+          echo 'Caught exception: ',  $e->getMessage(), "\n";
+      }
+
+      var_dump($book);
       self::render();
     }
 
