@@ -5,6 +5,7 @@
     function index() {
 
       $books = Book::all();
+
       var_dump($books);
 
       self::render();
