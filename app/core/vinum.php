@@ -90,23 +90,24 @@
       $argv = func_get_args();
 
       if ($number_of_args < 1) {
-        throw new Exception("You need to pass at least two parameters", 1);
         return null;
       }
+
       $class = get_called_class();
       $db = DB::connect();
       $items = [];
 
-
-
-      if ($condition == null) {
-        return null;
-      }
+      $condition = $argv[0];
 
       $results = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $condition);
-      $results->bindParam(':condition', $condition);
+
+      // Bind all arguments to the '?'
+      for ($i = 1; $i < $number_of_args; $i++) {
+        $results->bindValue($i, $argv[$i]);
+      }
+
       $results->execute();
-      $results = $results->fetchAll();
+      $results = $results->fetchAll(PDO::FETCH_ASSOC);
 
       foreach ($results as $result) {
         $item = new $class($result);
@@ -473,6 +474,7 @@
 
       return true;
     }
+
 
   }
 

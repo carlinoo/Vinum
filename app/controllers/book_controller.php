@@ -3,7 +3,9 @@
   class BookController extends ApplicationController {
 
     function index() {
-      $book = Book::where();
+      $book = Book::where('year = ? AND category_id = ?', 1997, 3);
+
+      var_dump($book);
 
       try {
         $book = Book::where();
