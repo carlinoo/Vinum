@@ -3,18 +3,10 @@
   class BookController extends ApplicationController {
 
     function index() {
-      $book = Book::where('year = ? AND category_id = ?', 1997, 3);
 
-      var_dump($book);
+      $books = Book::all();
+      var_dump($books);
 
-      try {
-        $book = Book::where();
-
-      } catch (Exception $e) {
-          echo 'Caught exception: ',  $e->getMessage(), "\n";
-      }
-
-      var_dump($book);
       self::render();
     }
 

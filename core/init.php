@@ -8,7 +8,7 @@
   require_once('lib/initializer.php');
   require_once('app/controllers/application_controller.php');
   require_once('app/models/application.php');
-  require_once('app/core/app.php');
+  require_once('core/app.php');
 
 
 ?>
