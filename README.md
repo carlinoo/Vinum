@@ -8,9 +8,9 @@ To make Vinum a rapid development framework, we use __*Convention over Configura
 Vinum is an alpha version so it is not recommendable to use apart from personal projects or to contribute to the framework.
 
 ### How to start?
-The first thing you need is to download or clone the repository. For future versions you will be able to just download the executable file and do `bin/vinum new [APP_NAME]` on the command line. A new folder will be generated on the location chosen with the new project.
+The first thing you need is to download or clone the repository. For future versions you will be able to just download the executable file and do `vinum new [APP_NAME]` on the command line. A new folder will be generated on the location chosen with the new project.
 
-After this you will need to make some changes lot let the application connect to the database. In `config/variables.php` fill in the details about the database. It will need to look like this:
+After this you will need to make some changes lot let the application connect to the database. If any of the files we will be talking about don't exist, just create them yourself. In `config/variables.php` fill in the details about the database. It will need to look like this:
 
 ``` php
 <?php
@@ -112,7 +112,7 @@ The models are the classes of your applications. You will write any methods ther
     // method to reserve a book
     public function reserve() {
 	    $this->reserved = true;
-	    $this.save
+	    $this.save_record
     }
 
   }
@@ -128,10 +128,13 @@ I am going to assume there is model called `Book`. If you use the right conventi
 $all_books = Book::all();
 
 // Get a specify book passing the id
-$book = Book::find(id);
+$book = Book::find($id);
 
 // Get books with certain conditions
 $books = Book::where("reserved = false");
+
+// Get books with certain conditions to avoid SQL Injections
+$books = Book::where("reserved = ? AND author = ?", "false", $author);
 
 // Get the number of all Books in the database
 $number_of_books = Book::count();
