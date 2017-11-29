@@ -6,8 +6,12 @@
 
       $books = Book::all();
 
-      var_dump($books);
+      // var_dump($books);
 
+      $b = new FlowingCollection();
+      $b['dog'] = 'sdf';
+      var_dump($b);
+      echo "<br><br><br>";
       self::render();
     }
 
