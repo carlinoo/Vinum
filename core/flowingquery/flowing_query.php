@@ -11,14 +11,15 @@ class FlowingQuery extends ArrayObject {
   }
 
 
+
+
+
   // This class method will return a list of objects retrieved from the database
   public static function where() {
     // get all arguments
     $argv = func_get_args()[0];
     $number_of_args = count($argv);
 
-    echo get_called_class();
-    echo "<br><br>";
     if ($number_of_args < 1) {
       return null;
     }
@@ -46,6 +47,8 @@ class FlowingQuery extends ArrayObject {
 
     return $items;
   }
+
+
 
 
 
@@ -97,9 +100,19 @@ class FlowingQuery extends ArrayObject {
 
 
 
+  // This function will get all the objects from the database selecting only the fields passed
+  // TODO FIXME not finished
+  public static function select() {
+
+    $argc = func_num_args();
+    $argv = func_get_arg(0);
+    $class = func_get_arg(1);
+
+    $db = DB::connect();
+    $items = new FlowingQuery();
 
 
-
+  }
 
 
 

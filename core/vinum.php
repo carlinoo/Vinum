@@ -2,6 +2,7 @@
 
   abstract class Vinum {
 
+
     // This constructor all the Models will use. It takes an hash and it
     public function __construct($params = null) {
       if ($params == null) {
@@ -24,6 +25,9 @@
         }
       }
     }
+
+
+
 
 
     // This method will be called if a class method is not define
@@ -52,6 +56,9 @@
       return call_user_func_array(["FlowingQuery", $method], $arguments);
 
     }
+
+
+
 
 
     // this class method will get all the objects of a table called from the child and return them
