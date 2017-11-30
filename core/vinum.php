@@ -26,10 +26,38 @@
     }
 
 
+    // This method will be called if a class method is not define
+    public static function __callStatic($method, $argv) {
+      $class = get_called_class();
+
+      // If the method exists, return
+      if (method_exists($class, $method)) {
+        return;
+      }
+
+      // Check if the method exists
+      if (!method_exists("FlowingQuery", $method)) {
+        throw new Exception("Static method $class::$method does not exist", 1);
+
+        return;
+      }
+
+      // We pass the caller of the class plus the extra parameters
+      $arguments = [];
+      $arguments[0] = $argv;
+      $arguments[1] = $class;
+
+
+      // call the method from the FlowingQuery and return the output
+      return call_user_func_array(["FlowingQuery", $method], $arguments);
+
+    }
+
+
     // this class method will get all the objects of a table called from the child and return them
     public static function all() {
       $class = get_called_class();
-      $all = [];
+      $all = new FlowingQuery();
       $db = DB::connect();
 
       // We dont bind the param $class as it is only the caller of this function
@@ -83,39 +111,7 @@
 
 
 
-    // This class method will return a list of objects retrieved from the database
-    public static function where() {
-      // get all arguments
-      $number_of_args = func_num_args();
-      $argv = func_get_args();
 
-      if ($number_of_args < 1) {
-        return null;
-      }
-
-      $class = get_called_class();
-      $db = DB::connect();
-      $items = [];
-
-      $condition = $argv[0];
-
-      $results = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $condition);
-
-      // Bind all arguments to the '?'
-      for ($i = 1; $i < $number_of_args; $i++) {
-        $results->bindValue($i, $argv[$i]);
-      }
-
-      $results->execute();
-      $results = $results->fetchAll(PDO::FETCH_ASSOC);
-
-      foreach ($results as $result) {
-        $item = new $class($result);
-        $items[] = $item;
-      }
-
-      return $items;
-    }
 
 
 
