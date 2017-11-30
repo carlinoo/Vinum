@@ -4,12 +4,10 @@
 
     function index() {
 
-      $books = Book::where('reserved = false');
-      // $books.count();
+      echo "<br><br>";
+      $books = Book::where('reserved = false')->order();
+      var_dump($books);
 
-      // $b = new FlowingCollection();
-      // $b['dog'] = 'sdf';
-      // var_dump($b);
       echo "<br><br><br>";
       self::render();
     }
