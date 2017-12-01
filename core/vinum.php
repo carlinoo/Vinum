@@ -60,31 +60,6 @@
 
 
 
-
-    // this class method will get all the objects of a table called from the child and return them
-    public static function all() {
-      $class = get_called_class();
-      $all = new FlowingQuery();
-      $db = DB::connect();
-
-      // We dont bind the param $class as it is only the caller of this function
-      $results = $db->prepare('SELECT * FROM ' . $class);
-      $results->execute();
-      $results = $results->fetchAll();
-
-      // We create a list of the objects from the database results
-      foreach($results as $obj) {
-        $item = new $class($obj);
-        $all[] = $item;
-      }
-
-      return $all;
-    } // end all()
-
-
-
-
-
     // This method will return an object queried from the database
     public static function find($id, $column = false) {
       $class = get_called_class();

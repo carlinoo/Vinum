@@ -5,7 +5,7 @@
 
 class FlowingQuery extends ArrayObject {
 
-
+  // override the constructor
   public function __construct() {
     parent::__construct(array(), ArrayObject::ARRAY_AS_PROPS);
   }
@@ -100,6 +100,33 @@ class FlowingQuery extends ArrayObject {
 
 
 
+
+  // this class method will get all the objects of a table called from the child and return them
+  public static function all() {
+    $argv = func_get_arg(0);
+    $class = func_get_arg(1);
+
+    $all = new FlowingQuery();
+    $db = DB::connect();
+
+    // We dont bind the param $class as it is only the caller of this function
+    $results = $db->prepare('SELECT * FROM ' . $class);
+    $results->execute();
+    $results = $results->fetchAll();
+
+    // We create a list of the objects from the database results
+    foreach($results as $obj) {
+      $item = new $class($obj);
+      $all[] = $item;
+    }
+
+    return $all;
+  } // end all()
+
+
+
+
+
   // This function will get all the objects from the database selecting only the fields passed
   // TODO FIXME not finished
   public static function select() {
@@ -113,6 +140,9 @@ class FlowingQuery extends ArrayObject {
 
 
   }
+
+
+
 
 
 

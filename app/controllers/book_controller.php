@@ -4,12 +4,10 @@
 
     function index() {
 
-      echo "<br><br>";
-      $books = Book::where('reserved = false')->order();
-      var_dump($books);
+      $books = Book::all();
 
-      echo "<br><br><br>";
-      self::render();
+
+      self::render('json', $books);
     }
 
     function json() {
