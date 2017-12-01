@@ -112,7 +112,7 @@ class FlowingQuery extends ArrayObject {
     // We dont bind the param $class as it is only the caller of this function
     $results = $db->prepare('SELECT * FROM ' . $class);
     $results->execute();
-    $results = $results->fetchAll();
+    $results = $results->fetchAll(PDO::FETCH_ASSOC);
 
     // We create a list of the objects from the database results
     foreach($results as $obj) {
@@ -127,19 +127,110 @@ class FlowingQuery extends ArrayObject {
 
 
 
+
+
+
+  // This method will return an object queried from the database
+  public static function find() {
+    $argv = func_get_arg(0);
+    $class = func_get_arg(1);
+
+    // Make sure they send at least one parameter
+    if (count($argv) < 1) {
+      throw new Exception("$class::find() expects at least one parameter", 1);
+      return;
+    }
+
+    $db = DB::connect();
+
+    // If $column is set, add change the condition
+    if (!isset($argv[1])) {
+      $column = "id";
+    } else {
+      $column = $argv[1];
+    }
+
+    $id = $argv[0];
+
+    // Check that $column exists on the table
+    if (!in_array($column, $class::get_column_names())) {
+      return null;
+    }
+
+    $result = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $column . ' = :id');
+    $result->bindParam(':id', $id);
+
+    $result->execute();
+
+    $result = $result->fetch(PDO::FETCH_ASSOC);
+
+    // If the is no result
+    if (!$result) {
+      return null;
+    }
+
+    return new $class($result);
+  } // end find()
+
+
+
+
+
   // This function will get all the objects from the database selecting only the fields passed
   // TODO FIXME not finished
   public static function select() {
 
-    $argc = func_num_args();
     $argv = func_get_arg(0);
     $class = func_get_arg(1);
+
+    // If not arguemnts passed
+    if (count($argv) < 1) {
+      throw new Exception("$class::select() expects at least one argument", 1);
+      return null;
+    }
+
+    // get all columns for the class
+    $table_columns = $class::get_column_names();
+
+    $selects = "";
+
+    // Check if all arguments passed are
+    foreach ($argv as $argument) {
+      if (!in_array($argument, $table_columns)) {
+        throw new Exception("Column $argument does not exist as $class.$argument", 1);
+        return null;
+      }
+      // If it does belong on the array, add it to the string separated by a comma
+      $selects .= " $argument,";
+    }
+
+    // Get rid of the last comma by a space
+    $selects = substr_replace($selects, " ", -1);
 
     $db = DB::connect();
     $items = new FlowingQuery();
 
+    $sql = $db->prepare("SELECT $selects FROM $class");
+    $sql->execute();
+
+    // Get all the items
+    $results = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+    // We create a list of the objects from the database results
+    foreach($results as $obj) {
+      $item = new $class($obj);
+      $items[] = $item;
+    }
+
+    return $items;
 
   }
+
+
+
+
+
+// This method checks if it has a a value in the array
 
 
 

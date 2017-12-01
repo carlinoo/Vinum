@@ -4,7 +4,7 @@
 
     function index() {
 
-      $books = Book::all();
+      $books = Book::select('a');
 
 
       self::render('json', $books);

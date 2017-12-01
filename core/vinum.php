@@ -60,36 +60,7 @@
 
 
 
-    // This method will return an object queried from the database
-    public static function find($id, $column = false) {
-      $class = get_called_class();
-      $db = DB::connect();
-
-      // If $column is set, add change the condition
-      if (!$column) {
-        $column = "id";
-      }
-
-      // Check that $column exists on the table
-      if (!in_array($column, $class::get_column_names())) {
-        return null;
-      }
-
-      $result = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $column . ' = :id');
-      $result->bindParam(':id', $id);
-
-      $result->execute();
-
-      $result = $result->fetch(PDO::FETCH_ASSOC);
-
-      // If the is no result
-      if (!$result) {
-        return null;
-      }
-
-      return new $class($result);
-    } // end find()
-
+  
 
 
 
