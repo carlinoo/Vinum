@@ -60,45 +60,6 @@
 
 
 
-  
-
-
-
-
-
-
-
-
-    // This class method will return the number of records of a table where the $attribute is not null
-    public static function count($condition = null, $attribute = null) {
-      if ($attribute == null) {
-        $attribute = '*';
-      } else {
-        // Check if the table has the $attribute
-        if (!self::has_attribute($attribute)) {
-          return null;
-        }
-      }
-
-
-      // If the condition is equal to null, get all
-      if ($condition == null) {
-        $condition = "WHERE 1 = 1";
-      }
-
-      $class = get_called_class();
-      $db = DB::connect();
-
-      $count = $db->prepare("SELECT COUNT(" . $attribute . ") AS count FROM $class WHERE $condition");
-      $count->execute();
-      $result = $count->fetch(PDO::FETCH_ASSOC);
-
-      // return the count
-      return (int)$result['count'];
-    }
-
-
-
 
     // This will retrieve all columns from a table
     public static function get_column_names() {
