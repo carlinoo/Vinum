@@ -170,7 +170,7 @@ void display_routes() {
 // This function will display the version of the system
 void display_version() {
   print_vinum();
-  printf("Version %s%s\n\n", KRED, VERSION);
+  printf("Version %s%s%s\n\n", KRED, VERSION, KNORMAL);
 }
 
 
