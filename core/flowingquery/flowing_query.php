@@ -177,7 +177,6 @@ class FlowingQuery extends ArrayObject {
 
 
   // This function will get all the objects from the database selecting only the fields passed
-  // TODO FIXME not finished
   public static function select() {
 
     $argv = func_get_arg(0);
@@ -230,9 +229,10 @@ class FlowingQuery extends ArrayObject {
 
 
 
-// This method checks if it has a a value in the array
-
-
+  // This method checks if it has a a value in the array
+  public function has($value) {
+    return in_array($value, $this->getArrayCopy());
+  }
 
 
 
