@@ -1,3 +1,5 @@
 config/variables.php
 .htaccess
 app/.htaccess
+bin/vinum
+bin/vinum.o

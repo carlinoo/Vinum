@@ -1,6 +1,6 @@
 <?php
 
-  require_once('app/core/vinum_controller.php');
+  require_once('core/vinum_controller.php');
 
   // This is the ApplicationController from which the rest of controllers will inherit from
   class ApplicationController extends VinumController {

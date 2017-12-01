@@ -2,6 +2,7 @@
 
   abstract class Vinum {
 
+
     // This constructor all the Models will use. It takes an hash and it
     public function __construct($params = null) {
       if ($params == null) {
@@ -26,10 +27,44 @@
     }
 
 
+
+
+
+    // This method will be called if a class method is not define
+    public static function __callStatic($method, $argv) {
+      $class = get_called_class();
+
+      // If the method exists, return
+      if (method_exists($class, $method)) {
+        return;
+      }
+
+      // Check if the method exists
+      if (!method_exists("FlowingQuery", $method)) {
+        throw new Exception("Static method $class::$method does not exist", 1);
+
+        return;
+      }
+
+      // We pass the caller of the class plus the extra parameters
+      $arguments = [];
+      $arguments[0] = $argv;
+      $arguments[1] = $class;
+
+
+      // call the method from the FlowingQuery and return the output
+      return call_user_func_array(["FlowingQuery", $method], $arguments);
+
+    }
+
+
+
+
+
     // this class method will get all the objects of a table called from the child and return them
     public static function all() {
       $class = get_called_class();
-      $all = [];
+      $all = new FlowingQuery();
       $db = DB::connect();
 
       // We dont bind the param $class as it is only the caller of this function
@@ -41,7 +76,6 @@
       foreach($results as $obj) {
         $item = new $class($obj);
         $all[] = $item;
-        //var_dump($item);
       }
 
       return $all;
@@ -67,7 +101,7 @@
       }
 
       $result = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $column . ' = :id');
-      $result->bindParam(':id', $id, PDO::PARAM_INT);
+      $result->bindParam(':id', $id);
 
       $result->execute();
 
@@ -85,29 +119,6 @@
 
 
 
-    // This class method will return a list of objects retrieved from the database
-    public static function where($column = null) {
-
-      $class = get_called_class();
-      $db = DB::connect();
-      $items = [];
-
-      if ($condition == null) {
-        return null;
-      }
-
-      $results = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $condition);
-      $results->bindParam(':condition', $condition);
-      $results->execute();
-      $results = $results->fetchAll();
-
-      foreach ($results as $result) {
-        $item = new $class($result);
-        $items[] = $item;
-      }
-
-      return $items;
-    }
 
 
 
@@ -466,6 +477,7 @@
 
       return true;
     }
+
 
   }
 

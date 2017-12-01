@@ -2,7 +2,12 @@ book/index view
 <br><br><br>
 <script>
 //
-send_ajax('POST', '/get_json', null, function(data) {
+
+var form_data = {
+  "hello": "hey"
+}
+
+send_ajax('POST', '/get_json', form_data, function(data) {
   console.log("SUCESS");
   console.log(data);
 }, function(data){

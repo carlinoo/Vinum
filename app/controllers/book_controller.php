@@ -3,13 +3,13 @@
   class BookController extends ApplicationController {
 
     function index() {
+
+      echo "<br><br>";
+      $books = Book::where('reserved = false')->order();
+      var_dump($books);
+
+      echo "<br><br><br>";
       self::render();
-
-      $b = new Book(array("son" => "father",
-                          "category_id" => "1"));
-
-      var_dump($b);
-
     }
 
     function json() {

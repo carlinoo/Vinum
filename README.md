@@ -8,9 +8,9 @@ To make Vinum a rapid development framework, we use __*Convention over Configura
 Vinum is an alpha version so it is not recommendable to use apart from personal projects or to contribute to the framework.
 
 ### How to start?
-The first thing you need is to download or clone the repository. For future versions you will be able to just download the executable file and do `bin/vinum new [APP_NAME]` on the command line. A new folder will be generated on the location chosen with the new project.
+The first thing you need is to download or clone the repository. For future versions you will be able to just download the executable file and do `vinum new [APP_NAME]` on the command line. A new folder will be generated on the location chosen with the new project.
 
-After this you will need to make some changes lot let the application connect to the database. In `config/variables.php` fill in the details about the database. It will need to look like this:
+After this you will need to make some changes lot let the application connect to the database. If any of the files we will be talking about don't exist, just create them yourself. In `config/variables.php` fill in the details about the database. It will need to look like this:
 
 ``` php
 <?php
@@ -112,7 +112,7 @@ The models are the classes of your applications. You will write any methods ther
     // method to reserve a book
     public function reserve() {
 	    $this->reserved = true;
-	    $this.save
+	    $this.save_record
     }
 
   }
@@ -128,10 +128,13 @@ I am going to assume there is model called `Book`. If you use the right conventi
 $all_books = Book::all();
 
 // Get a specify book passing the id
-$book = Book::find(id);
+$book = Book::find($id);
 
 // Get books with certain conditions
 $books = Book::where("reserved = false");
+
+// Get books with certain conditions to avoid SQL Injections
+$books = Book::where("reserved = ? AND author = ?", "false", $author);
 
 // Get the number of all Books in the database
 $number_of_books = Book::count();
@@ -160,7 +163,7 @@ $category = $book->category;
 ```
 
 ### Controllers
-Controllers are the 'middleware' between the user and the backend. They will talk to the model which will talk to the database and they will also interact with the user.  To read more about how the requests work, read more about Routes below.
+Controllers are the 'middleware' between the view and the model. They will talk to the model which will talk to the database and they will also interact with the user.  To read more about how the requests work, read more about Routes below.
 
 Let's take the example we were using above about a model called `Book`. We will need a controller called `book_controller.php`. This controller will look something like this:
 
@@ -173,7 +176,9 @@ Let's take the example we were using above about a model called `Book`. We will 
     function index() {
       $all_books = Book::all();
 
-      self::render();
+      self::render('view', [
+			      'all_books' => $all_books
+			      ]);
     }
 	
 	// Action to display all book in JSON format
@@ -186,7 +191,9 @@ Let's take the example we were using above about a model called `Book`. We will 
     function display($id) {
       $book = Book::find($id);
 
-      self::render();
+      self::render('view', [
+				  "book": $book
+				  ]);
     }
 
   }
@@ -195,14 +202,14 @@ Let's take the example we were using above about a model called `Book`. We will 
 
 ```
 
-Controllers are really powerful. Let say we have an action called `index` that will display all the books, you can get all the books and then at the very end of it you say `self::render();`. This will look for the file `app/views/book/index.php` where you can use the variable `$all_books` to display the information however you wish. Please read the Routes section below to understand how this system works.
+Controllers are really powerful. Let say we have an action called `index` that will display all the books, you can get all the books and then at the very end of it you say `self::render('view', ['books' => $all_books ]);`. This will look for the file `app/views/book/index.php` where you can use the variable `$books` to display the information however you wish. Please read the Routes section below to understand how this system works and Rendering Information.
 
 We also have a method called `get_json_books`. This is going to get all the books and then it will call the render function passing `'json'` as the first argument and the information we want to render as JSON as the second parameter (`$all_books`). This will need to be called at the end of the action, and it will display the information in JSON format without any view. This is generally useful when creating a project for an API or when using AJAX to request information.
 
 At the end we have the `display` action that takes and `id` as an argument. We can assume that when the user goes to `http://example.com/book/display/3` it will pass `3` as an argument. This is all done through the Routes (read more below). 
 
 ### Views
-Views are the way we display information. Then if we have a path like `app/views/book/index.php` will mean that we have a controller called `book_controller.php` with an action called `index`. Any variables declared on that action, can be used on the view. 
+Views are the way we display information. Then if we have a path like `app/views/book/index.php` will mean that we have a controller called `book_controller.php` with an action called `index`.  In order to use variables created on the controller, please refer to Rendering Information below.
 
 ### Routes
 Routes are a very important part of the Vinum Framework. They route a request from a user to an action of a controller. This is a JSON file located in `config/routes.json`. It looks something like this:
@@ -254,3 +261,9 @@ There are 5 ways to talk to the server. `GET, POST, UPDATE, PATCH and DELETE`. I
 Also, after `"book/display"` it says `"my_book"`. This will create a global variable called `my_book_path` that can be accessed everywhere and it will contain the location of that route i.e. `http://example.com/book/show`. These variables are very useful when trying to redirect users without having to remember the actual path of the request.
 
 ### Rendering Information
+There are multiple ways to display or render information. For now we can render information on two ways:
+
+* **JSON:** Rendering JSON is very useful, specially when creating REST APIs or when using asynchronous calls to the server, like with AJAX. It is very simple to render information in JSON format. When an action is called in a controller, you will first need to do the logic you need. Lets say we want to get a specific book and render it as JSON. Then we can do something like `self::render('json', Book::find($id));`.  After you call that function you want to avoid doing anything else, as it might affect the output.
+*  **Views:**  Rendering views is super easy. There are a few ways you can render a view depending on certain conditions. 
+	* __*If you want to use variables:*__ If you just want to load a view without using variables, then after the controller logic, you just `self::render();` or `self::render('view');`. That will load the view associated with the controller without passing any variables. If you want to send variables to the view, then you will need to send them as an array in the form of: `self::render('view', ["books": Book::all()]);`. Now you can use a variable `$books` on your view.
+	* __*If you want to load a specific view:*__ If you want to load a specific view and not the one defined by the action, then you can simple send the route as the first parameter. It would look something like this `self::render('book/display', ["books": Book::all()]);`. This load the view located at `app/views/book/display.php` sending the variable `$books` containing all the books from the database.
