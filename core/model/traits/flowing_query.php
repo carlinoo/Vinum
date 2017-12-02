@@ -5,26 +5,18 @@
 
 trait FlowingQuery {
 
-  // override the constructor
-  public function __construct() {
-    parent::__construct(array(), ArrayObject::ARRAY_AS_PROPS);
-  }
-
-
-
-
 
   // This class method will return a list of objects retrieved from the database
   public static function where() {
     // get all arguments
-    $argv = func_get_args()[0];
+    $class = $this->class;
+    $argv = func_get_args();
     $number_of_args = count($argv);
 
     if ($number_of_args < 1) {
       return null;
     }
 
-    $class = func_get_args()[1];
     $db = DB::connect();
     $items = new Model();
 
@@ -52,14 +44,50 @@ trait FlowingQuery {
 
 
 
+  // This will retrieve all columns from a table
+  public static function get_column_names() {
+
+    $db = DB::connect();
+
+    $result = $db->prepare('DESCRIBE ' . $this->class);
+    $result->execute();
+    $result = $result->fetchAll(PDO::FETCH_COLUMN);
+
+    return $result;
+  } // end get_column_names()
+
+
+
+
+
+
+  // This method will update the attributes of a certain class on the database
+  public function update_attributes() {
+
+    $db = DB::connect();
+
+    $conditions = $this->style_sql_attributes($this->arguments);
+
+    $update = $db->prepare('UPDATE ' . $class . ' SET' . $conditions . 'WHERE id = :id');
+    $update->bindParam(':id', $this->id);
+    $result = $update->execute();
+
+    return $result;
+  }
+
+
+
+
+
   // This method will order the array using the attribute of the object passed in either "ASC" or "DESC"
   public function order() {
     // Set the default values
     $attribute = 'id';
     $order = 'ASC';
 
-    $argc = func_num_args();
+    $class = $this->class;
     $argv = func_get_args();
+    $argc = count($argv);
 
 
     // If they pass only one parameter, find out if they are passing the order or the attribute
@@ -103,8 +131,8 @@ trait FlowingQuery {
 
   // this class method will get all the objects of a table called from the child and return them
   public static function all() {
-    $argv = func_get_arg(0);
-    $class = func_get_arg(1);
+    $class = $this->class;
+    $argv = func_get_args();
 
     $all = new Model();
     $db = DB::connect();
@@ -132,8 +160,8 @@ trait FlowingQuery {
 
   // This method will return an object queried from the database
   public static function find() {
-    $argv = func_get_arg(0);
-    $class = func_get_arg(1);
+    $class = $this->class;
+    $argv = func_get_args();
 
     // Make sure they send at least one parameter
     if (count($argv) < 1) {
@@ -157,6 +185,7 @@ trait FlowingQuery {
       return null;
     }
 
+
     $result = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $column . ' = :id');
     $result->bindParam(':id', $id);
 
@@ -179,8 +208,8 @@ trait FlowingQuery {
   // This function will get all the objects from the database selecting only the fields passed
   public static function select() {
 
-    $argv = func_get_arg(0);
-    $class = func_get_arg(1);
+    $class = $this->class;
+    $argv = func_get_args();
 
     // If not arguemnts passed
     if (count($argv) < 1) {
@@ -232,8 +261,8 @@ trait FlowingQuery {
 
   // This class method will return the first item of a table sorted by id
   public static function first() {
-    $argv = func_get_arg(0);
-    $class = func_get_arg(1);
+    $class = $this->class;
+    $argv = func_get_args();
 
     $db = DB::connect();
 
@@ -252,8 +281,8 @@ trait FlowingQuery {
 
   // This method will return the last item of a table sorted by id
   public static function last() {
-    $argv = func_get_arg(0);
-    $class = func_get_arg(1);
+    $class = $this->class;
+    $argv = func_get_args();
 
     $db = DB::connect();
 
@@ -278,19 +307,10 @@ trait FlowingQuery {
 
 
 
-
-  // This method will return weather a call has been made statically or from an instance
-  private static function is_static($argv) {
-    return (isset($argv[0]) && is_array($argv[0]) && isset($argv[1]) && is_string($argv[1]) && class_exists($argv[1]));
-  }
-
-
-
-
   // This method will check if an model exists on the database
   public function does_exist() {
-    $argv = func_get_arg(0);
-    $class = func_get_arg(1);
+    $class = $this->class;
+    $argv = func_get_args();
 
     if ($value == null) {
       $value = 'id';
@@ -310,6 +330,76 @@ trait FlowingQuery {
 
 
 
+
+
+  // ******************************* //
+  // ****** PROTECTED METHODS ****** //
+  // ******************************* //
+
+
+  // This method will style attribute conditions for a sql statement
+  protected function style_sql_attributes($attributes = null) {
+
+    if ($attributes == null) {
+      $attributes = get_object_vars($this->obj);
+    }
+
+    $class = $this->class;
+    $conditions = '';
+
+    // We loop through the attributes and we create the conditions array
+    foreach ($attributes as $key => $value) {
+      // We first check if the table has the attribute $key
+      if ($class::has_attribute($key)) {
+
+        // We cannot update the id of the record
+        if ($key == 'id') {
+          continue;
+        }
+
+        // We cannot update an $value if it's an object. If it is, update the id of it
+        if (gettype($value) == 'object') {
+          $value = $value->id;
+        } elseif (gettype($value) == 'string') {
+          $value = "'" . $value . "'";
+        } elseif (gettype($value) == 'boolean') {
+          $value = "'" . $value . "'";
+        }
+
+        $conditions = $conditions . " $key=$value,";
+      } else {
+        continue;
+      }
+    }
+
+    // we replace the last ',' for an space
+    $conditions = substr_replace($conditions, " ", -1);
+
+    return $conditions;
+
+  }
+
+
+
+
+
+
+  // This function will check if a class has certain attributes
+  protected static function has_attribute() {
+    $class = $this->class;
+    $argv = func_get_args();
+    $attribute = $argv[0];
+
+    $attributes = $class::get_column_names();
+
+    foreach ($attributes as $value) {
+      if ($value == $attribute) {
+        return true;
+      }
+    }
+
+    return false;
+  }
 
 
 }

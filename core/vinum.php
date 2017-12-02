@@ -46,14 +46,11 @@ require('core/model/model.php');
         return;
       }
 
-      // We pass the caller of the class plus the extra parameters
-      $arguments = [];
-      $arguments[0] = $argv;
-      $arguments[1] = $class;
+      $model = new Model($class, MODEL::STATIC_CALL);
 
 
       // call the method from the FlowingQuery and return the output
-      return call_user_func_array(["Model", $method], $arguments);
+      return call_user_func_array([$model, $method], $argv);
 
     }
 
@@ -61,56 +58,33 @@ require('core/model/model.php');
 
 
 
-    // This will retrieve all columns from a table
-    public static function get_column_names() {
+    // This method will be called if a method is not define
+    public function __call($method, $argv) {
       $class = get_called_class();
-      $db = DB::connect();
 
-      $result = $db->prepare('DESCRIBE ' . $class);
-      $result->execute();
-      $result = $result->fetchAll(PDO::FETCH_COLUMN);
-
-      return $result;
-    } // end get_column_names()
-
-
-
-
-
-
-
-    // This function will check if a class has certain attributes
-    private static function has_attribute($attribute) {
-      $class = get_called_class();
-      $attributes = $class::get_column_names();
-
-      foreach ($attributes as $value) {
-        if ($value == $attribute) {
-          return true;
-        }
+      // If the method exists, return
+      if (method_exists($class, $method)) {
+        return;
       }
 
-      return false;
+      // Check if the method exists
+      if (!method_exists("Model", $method)) {
+        throw new Exception("Static method $class::$method does not exist", 1);
+
+        return;
+      }
+
+      // We pass the caller of the class plus the extra parameters
+
+      $model = new Model($class, MODEL::INSTANCE_CALL, $this);
+
+      // call the method from the FlowingQuery and return the output
+      return call_user_func_array([$model, $method], $argv);
+
     }
 
 
 
-
-
-
-    // This method will update the attributes of a certain class on the database
-    public function update_attributes($attributes) {
-      $class = get_called_class();
-      $db = DB::connect();
-
-      $conditions = $this->style_sql_attributes($attributes);
-
-      $update = $db->prepare('UPDATE ' . $class . ' SET' . $conditions . 'WHERE id = :id');
-      $update->bindParam(':id', $this->id);
-      $result = $update->execute();
-
-      return $result;
-    }
 
 
 
@@ -246,52 +220,7 @@ require('core/model/model.php');
 
 
 
-    // ******************************* //
-    // ****** PROTECTED METHODS ****** //
-    // ******************************* //
 
-
-    // This method will style attribute conditions for a sql statement
-    protected function style_sql_attributes($attributes = null) {
-
-      if ($attributes == null) {
-        $attributes = get_object_vars($this);
-      }
-
-      $class = get_called_class();
-      $conditions = '';
-
-      // We loop through the attributes and we create the conditions array
-      foreach ($attributes as $key => $value) {
-        // We first check if the table has the attribute $key
-        if ($class::has_attribute($key)) {
-
-          // We cannot update the id of the record
-          if ($key == 'id') {
-            continue;
-          }
-
-          // We cannot update an $value if it's an object. If it is, update the id of it
-          if (gettype($value) == 'object') {
-            $value = $value->id;
-          } elseif (gettype($value) == 'string') {
-            $value = "'" . $value . "'";
-          } elseif (gettype($value) == 'boolean') {
-            $value = "'" . $value . "'";
-          }
-
-          $conditions = $conditions . " $key=$value,";
-        } else {
-          continue;
-        }
-      }
-
-      // we replace the last ',' for an space
-      $conditions = substr_replace($conditions, " ", -1);
-
-      return $conditions;
-
-    }
 
 
 

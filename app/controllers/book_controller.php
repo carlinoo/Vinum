@@ -4,7 +4,8 @@
 
     function index() {
 
-      $books = Book::all();
+      $books = Book::last();
+      // $books->update_attributes();
       // $books = Book::where('reserved = false');
       // var_dump($books);
       // var_dump($books->has(Book::find(1)));
