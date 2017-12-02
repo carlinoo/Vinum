@@ -264,14 +264,30 @@ trait FlowingQuery {
     $class = $this->class;
     $argv = func_get_args();
 
+    // If argument isnt passed and it isnt an integer, limit will be 1 
+    $limit = (isset($argv[0]) && is_int($argv[0])) ? $argv[0] : 1;
+
     $db = DB::connect();
 
-    $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id ASC LIMIT 1');
+    $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id ASC LIMIT ' . $limit);
     $obj->execute();
 
-    $result = $obj->fetch(PDO::FETCH_ASSOC);
+    $result = $obj->fetchAll(PDO::FETCH_ASSOC);
 
-    return new $class($result);
+    $items = new Model();
+
+    // If more than one object is being looked for
+    if (count($result) > 1) {
+      foreach ($result as $key) {
+        $item = new $class($key);
+        $items[] = $item;
+      }
+
+      return $items;
+    }
+
+    // if there is only one object, return the only only object of the array
+    return new $class($result[0]);
   }
 
 
@@ -284,14 +300,31 @@ trait FlowingQuery {
     $class = $this->class;
     $argv = func_get_args();
 
+    // If argument isnt passed and it isnt an integer, limit will be 1
+    $limit = (isset($argv[0]) && is_int($argv[0])) ? $argv[0] : 1;
+
     $db = DB::connect();
 
-    $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id DESC LIMIT 1');
+    $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id DESC LIMIT ' . $limit);
     $obj->execute();
 
-    $result = $obj->fetch(PDO::FETCH_ASSOC);
+    $items = new Model();
 
-    return new $class($result);
+    $result = $obj->fetchAll(PDO::FETCH_ASSOC);
+
+    // If more than one object is being looked for
+    if (count($result) > 1) {
+      foreach ($result as $key) {
+        $item = new $class($key);
+        $items[] = $item;
+      }
+
+      return $items;
+    }
+
+    // if there is only one object, return the only only object of the array
+    return new $class($result[0]);
+
   }
 
 
