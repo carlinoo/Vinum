@@ -1,7 +1,7 @@
 <?php
+require('core/model/model.php');
 
   abstract class Vinum {
-
 
     // This constructor all the Models will use. It takes an hash and it
     public function __construct($params = null) {
@@ -40,7 +40,7 @@
       }
 
       // Check if the method exists
-      if (!method_exists("FlowingQuery", $method)) {
+      if (!method_exists("Model", $method)) {
         throw new Exception("Static method $class::$method does not exist", 1);
 
         return;
@@ -53,7 +53,7 @@
 
 
       // call the method from the FlowingQuery and return the output
-      return call_user_func_array(["FlowingQuery", $method], $arguments);
+      return call_user_func_array(["Model", $method], $arguments);
 
     }
 
@@ -237,30 +237,6 @@
       return true;
     }
 
-
-
-
-
-    // This method will check if an model exists on the database
-    public function does_exist($value = null) {
-      $class = get_called_class();
-      $db = DB::connect();
-
-      if ($value == null) {
-        $value = 'id';
-      }
-
-      // If the object doesnt have the attribute passed on
-      if (!$this->has_attribute($value)) {
-        return false;
-      }
-
-      $response = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $value . ' = :id');
-      $response->bindParam(':id', $this->$value);
-      $response->execute();
-
-      return (!empty($response->fetch(PDO::FETCH_ASSOC)));
-    }
 
 
 

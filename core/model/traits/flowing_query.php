@@ -3,7 +3,7 @@
 // Represents a collection for calling a database.
 // For the static methods where arguments are passed, the arguments will be accesses as func_get_args()[0]. func_get_args()[1] will contain the name of the class calling the method
 
-class FlowingQuery extends ArrayObject {
+trait FlowingQuery {
 
   // override the constructor
   public function __construct() {
@@ -26,7 +26,7 @@ class FlowingQuery extends ArrayObject {
 
     $class = func_get_args()[1];
     $db = DB::connect();
-    $items = new FlowingQuery();
+    $items = new Model();
 
     $condition = $argv[0];
 
@@ -106,7 +106,7 @@ class FlowingQuery extends ArrayObject {
     $argv = func_get_arg(0);
     $class = func_get_arg(1);
 
-    $all = new FlowingQuery();
+    $all = new Model();
     $db = DB::connect();
 
     // We dont bind the param $class as it is only the caller of this function
@@ -207,7 +207,7 @@ class FlowingQuery extends ArrayObject {
     $selects = substr_replace($selects, " ", -1);
 
     $db = DB::connect();
-    $items = new FlowingQuery();
+    $items = new Model();
 
     $sql = $db->prepare("SELECT $selects FROM $class");
     $sql->execute();
@@ -254,7 +254,7 @@ class FlowingQuery extends ArrayObject {
   public static function last() {
     $argv = func_get_arg(0);
     $class = func_get_arg(1);
-    
+
     $db = DB::connect();
 
     $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id DESC LIMIT 1');
@@ -282,6 +282,30 @@ class FlowingQuery extends ArrayObject {
   // This method will return weather a call has been made statically or from an instance
   private static function is_static($argv) {
     return (isset($argv[0]) && is_array($argv[0]) && isset($argv[1]) && is_string($argv[1]) && class_exists($argv[1]));
+  }
+
+
+
+
+  // This method will check if an model exists on the database
+  public function does_exist() {
+    $argv = func_get_arg(0);
+    $class = func_get_arg(1);
+
+    if ($value == null) {
+      $value = 'id';
+    }
+
+    // If the object doesnt have the attribute passed on
+    if (!$this->has_attribute($value)) {
+      return false;
+    }
+
+    $response = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $value . ' = :id');
+    $response->bindParam(':id', $this->$value);
+    $response->execute();
+
+    return (!empty($response->fetch(PDO::FETCH_ASSOC)));
   }
 
 
