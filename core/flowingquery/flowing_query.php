@@ -229,6 +229,47 @@ class FlowingQuery extends ArrayObject {
 
 
 
+
+  // This class method will return the first item of a table sorted by id
+  public static function first() {
+    $argv = func_get_arg(0);
+    $class = func_get_arg(1);
+
+    $db = DB::connect();
+
+    $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id ASC LIMIT 1');
+    $obj->execute();
+
+    $result = $obj->fetch(PDO::FETCH_ASSOC);
+
+    return new $class($result);
+  }
+
+
+
+
+
+
+  // This method will return the last item of a table sorted by id
+  public static function last() {
+    $argv = func_get_arg(0);
+    $class = func_get_arg(1);
+    
+    $db = DB::connect();
+
+    $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id DESC LIMIT 1');
+    $obj->execute();
+
+    $result = $obj->fetch(PDO::FETCH_ASSOC);
+
+    return new $class($result);
+  }
+
+
+
+
+
+
   // This method checks if it has a a value in the array
   public function has($value) {
     return in_array($value, $this->getArrayCopy());
@@ -238,40 +279,15 @@ class FlowingQuery extends ArrayObject {
 
 
 
-  // This class method will return the number of records of a table where the $attribute is not null
-  // public static function count() {
-  //   $argv = func_get_arg(0);
-  //   $class = func_get_arg(1);
-  //
-  //   if (!isset($argv[0])) {
-  //     $attribute = '*';
-  //   } else {
-  //     $attribute = $argv[0];
-  //
-  //     // Check if the table has the $attribute
-  //     if (!$class::has_attribute($attribute)) {
-  //       return null;
-  //     }
-  //   }
-  //
-  //   $class = get_called_class();
-  //   $db = DB::connect();
-  //
-  //   $count = $db->prepare("SELECT COUNT(" . $attribute . ") AS count FROM $class");
-  //   $count->execute();
-  //   $result = $count->fetch(PDO::FETCH_ASSOC);
-  //
-  //   // return the count
-  //   return (int)$result['count'];
-  // }
-
-
-
-
   // This method will return weather a call has been made statically or from an instance
   private static function is_static($argv) {
     return (isset($argv[0]) && is_array($argv[0]) && isset($argv[1]) && is_string($argv[1]) && class_exists($argv[1]));
   }
+
+
+
+
+
 }
 
  ?>

@@ -4,14 +4,13 @@
 
     function index() {
 
-      $books = Book::all();
-      $books = $books->all();
+      $books = Book::last();
       // $books = Book::where('reserved = true');
       // var_dump($books);
       // var_dump($books->has(Book::find(28)));
 
 
-      // self::render('json', $books);
+      self::render('json', $books);
     }
 
     function json() {

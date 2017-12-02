@@ -115,39 +115,6 @@
 
 
 
-
-    // This method will return the last item of a table sorted by id
-    public static function last() {
-      $class = get_called_class();
-      $db = DB::connect();
-
-      $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id DESC LIMIT 1');
-      $obj->execute();
-
-      $result = $obj->fetch(PDO::FETCH_ASSOC);
-
-      return new $class($result);
-    }
-
-
-
-
-    // This class method will return the first item of a table sorted by id
-    public static function first() {
-      $class = get_called_class();
-      $db = DB::connect();
-
-      $obj = $db->prepare('SELECT * FROM ' . $class . ' ORDER BY id ASC LIMIT 1');
-      $obj->execute();
-
-      $result = $obj->fetch(PDO::FETCH_ASSOC);
-
-      return new $class($result);
-    }
-
-
-
-
     // This method will create a record if the caller doest exist on the database,
     // and if it does exist, it will update the record with its attributes,
     // returning wheather the action is successfull
