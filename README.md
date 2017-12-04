@@ -148,8 +148,17 @@ $book->update_attributes(array("reserved" => 1));
 // Get the last book
 $last_book = Book::last();
 
+// Get the las 3 books
+$last_book = Book::last(3);
+
 // Get the first book
 $first_book = Book::first();
+
+// Get the first 3 books
+$first_book = Book::first(3);
+
+// Get only the id, author and category_id of all books
+$books = Book::select('id', 'author', 'category_id');
 
 // Delete a book from the database
 $book->destroy();
