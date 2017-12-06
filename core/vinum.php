@@ -184,42 +184,6 @@ require('core/model/model.php');
 
 
 
-    // This function will destroy an element on the database
-    public function destroy($primary_key = null) {
-      $class = get_called_class();
-
-      // If the class doesnt exist on the database
-      if (!$this->does_exist()) {
-        return false;
-      }
-
-      if ($primary_key == null) {
-        $primary_key = 'id';
-      }
-
-      // Check if the class has the attribute $primary_key
-      if (!$class::has_attribute($primary_key)) {
-        return false;
-      }
-
-      $db = DB::connect();
-
-      $destroy = $db->prepare("DELETE FROM $class WHERE $primary_key = :pk");
-      $destroy->bindParam(':pk', $this->$primary_key);
-      $destroy->execute();
-
-      return true;
-    }
-
-
-
-
-
-
-
-
-
-
 
 
 

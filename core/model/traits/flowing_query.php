@@ -264,7 +264,7 @@ trait FlowingQuery {
     $class = $this->class;
     $argv = func_get_args();
 
-    // If argument isnt passed and it isnt an integer, limit will be 1 
+    // If argument isnt passed and it isnt an integer, limit will be 1
     $limit = (isset($argv[0]) && is_int($argv[0])) ? $argv[0] : 1;
 
     $db = DB::connect();
@@ -344,22 +344,53 @@ trait FlowingQuery {
   public function does_exist() {
     $class = $this->class;
     $argv = func_get_args();
-
-    if ($value == null) {
-      $value = 'id';
-    }
+    // Set the $primary_key if not passed = 'id'
+    $primary_key = (isset($argv[0]) && is_string($argv[0])) ? $argv[0] : 'id';
 
     // If the object doesnt have the attribute passed on
-    if (!$this->has_attribute($value)) {
+    if (!$this->has_attribute($primary_key)) {
       return false;
     }
 
-    $response = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $value . ' = :id');
-    $response->bindParam(':id', $this->$value);
+    var_dump($this->obj);
+
+    $response = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $primary_key . ' = :id');
+    $response->bindParam(':id', $this->obj->id);
     $response->execute();
 
     return (!empty($response->fetch(PDO::FETCH_ASSOC)));
   }
+
+
+
+
+  // This function will destroy an element on the database
+  public function destroy($primary_key = 'id') {
+    $class = $this->class;
+
+    // If the class doesnt exist on the database
+    if (!$this->does_exist()) {
+      return false;
+    }
+
+    if ($primary_key == null) {
+      $primary_key = 'id';
+    }
+
+    // Check if the class has the attribute $primary_key
+    if (!$this->has_attribute($primary_key)) {
+      return false;
+    }
+
+    $db = DB::connect();
+
+    $destroy = $db->prepare("DELETE FROM $class WHERE $primary_key = :pk");
+    $destroy->bindParam(':pk', $this->$primary_key);
+    $destroy->execute();
+
+    return true;
+  }
+
 
 
 
@@ -418,12 +449,12 @@ trait FlowingQuery {
 
 
   // This function will check if a class has certain attributes
-  protected static function has_attribute() {
+  public static function has_attribute() {
     $class = $this->class;
     $argv = func_get_args();
     $attribute = $argv[0];
 
-    $attributes = $class::get_column_names();
+    $attributes = $this->get_column_names();
 
     foreach ($attributes as $value) {
       if ($value == $attribute) {
