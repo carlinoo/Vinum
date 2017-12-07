@@ -36,3 +36,4 @@ INSERT INTO Book (ISBN, title, author, edition, year, category_id, reserved) VAL
 
 INSERT INTO Book (ISBN, title, author, edition, year, category_id, reserved) VALUES
                  ('9987-0039882', 'Shooting History', 'Jon Snow', 1, 2003, 1, 0);
+                 
