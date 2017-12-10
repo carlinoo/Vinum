@@ -6,7 +6,6 @@
 
       $books = Book::find(1);
 
-      var_dump($books->does_exist());
       // $books->update_attributes();
       // $books = Book::where('reserved = false');
       // var_dump($books);
