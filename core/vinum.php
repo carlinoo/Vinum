@@ -87,8 +87,6 @@ require('core/model/model.php');
 
 
 
-
-
     // This method will create a record if the caller doest exist on the database,
     // and if it does exist, it will update the record with its attributes,
     // returning wheather the action is successfull
