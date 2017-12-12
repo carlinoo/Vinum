@@ -1,4 +1,4 @@
-# Vinum
+# Vinum - Alpha Version => Some things might not work as expected
 
 ### What is Vinum?
 Vinum is a new open-source Model View Controller (MVC) Framework. It is designed to make it really fast for developers to build scalable PHP applications while not affecting performance. If you are used to *Ruby on Rails* or *Laravel*, then you will love Vinum.

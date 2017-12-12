@@ -46,7 +46,6 @@ trait FlowingQuery {
 
   // This will retrieve all columns from a table
   public static function get_column_names() {
-
     $db = DB::connect();
 
     $result = $db->prepare('DESCRIBE ' . $this->class);
@@ -352,7 +351,7 @@ trait FlowingQuery {
       return false;
     }
 
-    var_dump($this->obj);
+    $db = DB::connect();
 
     $response = $db->prepare('SELECT * FROM ' . $class . ' WHERE ' . $primary_key . ' = :id');
     $response->bindParam(':id', $this->obj->id);
@@ -449,12 +448,12 @@ trait FlowingQuery {
 
 
   // This function will check if a class has certain attributes
-  public static function has_attribute() {
+  public function has_attribute() {
     $class = $this->class;
     $argv = func_get_args();
     $attribute = $argv[0];
 
-    $attributes = $this->get_column_names();
+    $attributes = $this->class::get_column_names();
 
     foreach ($attributes as $value) {
       if ($value == $attribute) {
