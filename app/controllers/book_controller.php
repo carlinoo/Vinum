@@ -4,7 +4,7 @@
 
     function index() {
 
-      $books = Book::find(1);
+      $books = Book::all('id = ?', 27);
 
       // var_dump($books->does_exist());
       // $books->update_attributes();

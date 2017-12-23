@@ -16,7 +16,6 @@
       $this->class = $klass;
       $this->is_static = $static;
       parent::__construct(array(), ArrayObject::ARRAY_AS_PROPS);
-
     }
 
     // This method will return weather a call has been made statically or from an instance
