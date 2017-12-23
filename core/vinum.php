@@ -34,7 +34,7 @@ require('core/model/model.php');
       $attr = $obj . '_id';
       $class = get_called_class();
 
-      // If the object does not have attribute throw error
+      // If the object does not have attribute
       if (!property_exists($this, $attr)) {
         throw new Exception("$class does not have a attribute $attr", 1);
         return;

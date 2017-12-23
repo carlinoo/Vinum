@@ -1,7 +1,5 @@
 <?php
 
-  require('app/models/category.php');
-
   class BookController extends ApplicationController {
 
     function index() {

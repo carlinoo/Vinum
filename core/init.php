@@ -7,9 +7,15 @@
   require_once('config/connection.php');
   require_once('core/extras/classes/anomaly.php');
   require_once('lib/initializer.php');
+
+  // Require all the models
+  foreach (glob("app/models/*.php") as $filename) {
+    require_once($filename);
+  }
+
   require_once('app/controllers/application_controller.php');
-  require_once('app/models/application.php');
   require_once('core/app.php');
+
 
 
 ?>
