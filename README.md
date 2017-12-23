@@ -1,4 +1,4 @@
-# Vinum - Alpha Version => Some things might not work as expected
+# Vinum - Alpha Version
 
 ### What is Vinum?
 Vinum is a new open-source Model View Controller (MVC) Framework. It is designed to make it really fast for developers to build scalable PHP applications while not affecting performance. If you are used to *Ruby on Rails* or *Laravel*, then you will love Vinum.
@@ -58,7 +58,7 @@ To migrate the database you will need to do `bin/vinum db:migrate`.
 If you want to generate a model, controller and migration file with the same name then use `bin/vinum generate resource [RESOURCE_NAME]` or `bin/vinum g resource [RESOURCE_NAME]`.
 
 ##### Options
-If you forget any command, you can simply do `bin/vinum --help` to get all the commands available. 
+If you forget any command, you can simply do `bin/vinum --help` to get all the commands available.
 
 To show the version, use `bin/vinum --version` or `bin/vinum --v`.
 
@@ -92,12 +92,12 @@ Vinum makes development really easy, fast and easy if the development convention
 
 * **File names:** When creating a new object, let say Book for example, you will need to keep everything the same. This means calling the model `book.php`, the controller `book_controller.php`, the database table will be called `Book` and the view folder will be called `book`. Also, if you need a page to show all the books from the database and you call that action inside `book_controller.php` something like `all_books`, then you are recommended to call a file inside `app/views/book` called `all_books.php`.
 
-* **Database Primary Keys:** To make the development very fast, code readable and maintainable, you want to use a primary key for all database tables called `id`. This does not mean you cannot have more primary keys. 
+* **Database Primary Keys:** To make the development very fast, code readable and maintainable, you want to use a primary key for all database tables called `id`. This does not mean you cannot have more primary keys.
 
 *  **Database Associations:** If the `Book` table has a category which references to a table called `Category`, then you will need the foreign key on the table `Book` table called `category_id`. This comes very handy when retrieving information about a model and all their associations as objects, instead of as just raw data.
 
 ### Migrations
-Migrations are the way to keep track of all the changes you have done to the database. This way, if you wipe the database by mistake, buy a new computer or work with multiple people on the same project, you will always have the same database structure. Every time you want a new table, change a column or any change, you will have to generate a new migration file via the command line, go to the new file generated and write your SQL code there. After you do so, you can go to the command like and migrate the database using `bin/vinum db:migrate`. 
+Migrations are the way to keep track of all the changes you have done to the database. This way, if you wipe the database by mistake, buy a new computer or work with multiple people on the same project, you will always have the same database structure. Every time you want a new table, change a column or any change, you will have to generate a new migration file via the command line, go to the new file generated and write your SQL code there. After you do so, you can go to the command like and migrate the database using `bin/vinum db:migrate`.
 
 If everything is successful, you won't see any errors displayed on the screen and the changes will be made. Remember that every time you create a new model or resource, a new migration file will be created and you will need to create a table with the same name as the model.
 
@@ -108,7 +108,7 @@ The models are the classes of your applications. You will write any methods ther
 <?php
 
   class Book extends Application {
-    
+
     // method to reserve a book
     public function reserve() {
 	    $this->reserved = true;
@@ -119,7 +119,7 @@ The models are the classes of your applications. You will write any methods ther
 
  ?>
 ```
-All models will inherit from `Application`, which itself will inhert from `Vinum`. This is useful to give you certain functionality talked about below. If you want to add any generic methods to all models, you will do that in the `Application` model. 
+All models will inherit from `Application`, which itself will inhert from `Vinum`. This is useful to give you certain functionality talked about below. If you want to add any generic methods to all models, you will do that in the `Application` model.
 
 ##### Methods
 I am going to assume there is model called `Book`. If you use the right convention talked about previously, you will get functionality like:
@@ -180,7 +180,7 @@ Let's take the example we were using above about a model called `Book`. We will 
 <?php
 
   class BookController extends ApplicationController {
-	
+
 	// Action to display all books
     function index() {
       $all_books = Book::all();
@@ -189,7 +189,7 @@ Let's take the example we were using above about a model called `Book`. We will 
 			      'all_books' => $all_books
 			      ]);
     }
-	
+
 	// Action to display all book in JSON format
     function get_json_books() {
 	  $all_books = Book::all();
@@ -215,7 +215,7 @@ Controllers are really powerful. Let say we have an action called `index` that w
 
 We also have a method called `get_json_books`. This is going to get all the books and then it will call the render function passing `'json'` as the first argument and the information we want to render as JSON as the second parameter (`$all_books`). This will need to be called at the end of the action, and it will display the information in JSON format without any view. This is generally useful when creating a project for an API or when using AJAX to request information.
 
-At the end we have the `display` action that takes and `id` as an argument. We can assume that when the user goes to `http://example.com/book/display/3` it will pass `3` as an argument. This is all done through the Routes (read more below). 
+At the end we have the `display` action that takes and `id` as an argument. We can assume that when the user goes to `http://example.com/book/display/3` it will pass `3` as an argument. This is all done through the Routes (read more below).
 
 ### Views
 Views are the way we display information. Then if we have a path like `app/views/book/index.php` will mean that we have a controller called `book_controller.php` with an action called `index`.  In order to use variables created on the controller, please refer to Rendering Information below.
@@ -265,7 +265,7 @@ Routes are a very important part of the Vinum Framework. They route a request fr
 }
 ```
 
-There are 5 ways to talk to the server. `GET, POST, UPDATE, PATCH and DELETE`. Inside each we have an array of all routes. Lets look at the first `"/book/show/:id"`. This one is located inside the `GET` array, so the HTTP Request will be of type `GET`. When a user types in `http://example.com/book/show/5` it will find first `"book/display"`. This means that it will send this request to the `book_controller.php` to the action `display` and will send the argument 	`5`. (See above the controller section for the same example). 
+There are 5 ways to talk to the server. `GET, POST, UPDATE, PATCH and DELETE`. Inside each we have an array of all routes. Lets look at the first `"/book/show/:id"`. This one is located inside the `GET` array, so the HTTP Request will be of type `GET`. When a user types in `http://example.com/book/show/5` it will find first `"book/display"`. This means that it will send this request to the `book_controller.php` to the action `display` and will send the argument 	`5`. (See above the controller section for the same example).
 
 Also, after `"book/display"` it says `"my_book"`. This will create a global variable called `my_book_path` that can be accessed everywhere and it will contain the location of that route i.e. `http://example.com/book/show`. These variables are very useful when trying to redirect users without having to remember the actual path of the request.
 
@@ -273,6 +273,6 @@ Also, after `"book/display"` it says `"my_book"`. This will create a global vari
 There are multiple ways to display or render information. For now we can render information on two ways:
 
 * **JSON:** Rendering JSON is very useful, specially when creating REST APIs or when using asynchronous calls to the server, like with AJAX. It is very simple to render information in JSON format. When an action is called in a controller, you will first need to do the logic you need. Lets say we want to get a specific book and render it as JSON. Then we can do something like `self::render('json', Book::find($id));`.  After you call that function you want to avoid doing anything else, as it might affect the output.
-*  **Views:**  Rendering views is super easy. There are a few ways you can render a view depending on certain conditions. 
+*  **Views:**  Rendering views is super easy. There are a few ways you can render a view depending on certain conditions.
 	* __*If you want to use variables:*__ If you just want to load a view without using variables, then after the controller logic, you just `self::render();` or `self::render('view');`. That will load the view associated with the controller without passing any variables. If you want to send variables to the view, then you will need to send them as an array in the form of: `self::render('view', ["books": Book::all()]);`. Now you can use a variable `$books` on your view.
 	* __*If you want to load a specific view:*__ If you want to load a specific view and not the one defined by the action, then you can simple send the route as the first parameter. It would look something like this `self::render('book/display', ["books": Book::all()]);`. This load the view located at `app/views/book/display.php` sending the variable `$books` containing all the books from the database.
