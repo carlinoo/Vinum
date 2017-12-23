@@ -5,6 +5,7 @@ require('core/model/model.php');
 
     // This constructor all the Models will use. It takes an hash and it
     public function __construct($params = null) {
+
       if ($params == null) {
         return;
       }
@@ -15,18 +16,41 @@ require('core/model/model.php');
 
         // If the $key finishes in '_id', it means its an object.
         // We create an object of the type $key taking away '_id'
-        if (substr($key, -3) === '_id') {
-          $obj = substr($key, 0, -3);
-          $class = ucfirst($obj);
-
-          if (class_exists($class)) {
-            $this->$obj = $class::find($value);
-          }
-        }
+        // if (substr($key, -3) === '_id') {
+        //   $obj = substr($key, 0, -3);
+        //   $class = ucfirst($obj);
+        //
+        //   if (class_exists($class)) {
+        //     $this->$obj = $class::find($value);
+        //   }
+        // }
       }
     }
 
 
+
+    // This will be called every time an attribute of an object is called if that object is does not have that atribute
+    public function __get($obj) {
+      $attr = $obj . '_id';
+      $class = get_called_class();
+
+      // If the object does not have attribute throw error
+      if (!property_exists($this, $attr)) {
+        throw new Exception("$class does not have a attribute $attr", 1);
+        return;
+      }
+
+      // If the class does not have a has_one method and it doesnt have in the array the $obj
+      if (!method_exists($this, "has_one") || !in_array($obj, $this->has_one())) {
+        throw new Exception("$class expects function belongs_to() returning an array of the attributes", 1);
+        return;
+      }
+
+      $object_class = ucfirst($obj);
+
+      return $object_class::find($this->$attr);
+
+    }
 
 
 

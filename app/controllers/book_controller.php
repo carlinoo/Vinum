@@ -1,10 +1,14 @@
 <?php
 
+  require('app/models/category.php');
+
   class BookController extends ApplicationController {
 
     function index() {
 
-      $books = Book::all('id = ?', 27);
+      $books = Book::where('id = ?', 27);
+
+      // var_dump(Book::first()->category);
 
       // var_dump($books->does_exist());
       // $books->update_attributes();
@@ -12,7 +16,7 @@
       // var_dump($books);
       // var_dump($books->has(Book::find(1)));
 
-      self::render('json', $books);
+      self::render('json', Book::first()->category);
     }
 
     function json() {
