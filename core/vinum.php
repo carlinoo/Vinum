@@ -31,24 +31,36 @@ require('core/model/model.php');
 
     // This will be called every time an attribute of an object is called if that object is does not have that atribute
     public function __get($obj) {
-      $attr = $obj . '_id';
       $class = get_called_class();
 
-      // If the object does not have attribute
-      if (!property_exists($this, $attr)) {
-        throw new Exception("$class does not have a attribute $attr", 1);
-        return;
+      // If the relation is has_one
+      if (method_exists($this, "has_one") && in_array($obj, $this->has_one())) {
+        $attr = $obj . '_id';
+
+        // If the object does not have attribute ending in '_id'
+        if (!property_exists($this, $attr)) {
+          throw new Exception("$class does not have a attribute $attr", 1);
+          return;
+        }
+
+        $object_class = ucfirst($obj);
+
+        return $object_class::find($this->$attr);
       }
 
-      // If the class does not have a has_one method and it doesnt have in the array the $obj
-      if (!method_exists($this, "has_one") || !in_array($obj, $this->has_one())) {
-        throw new Exception("$class expects function belongs_to() returning an array of the attributes", 1);
-        return;
+
+      // If the relation is has_many
+      if (method_exists($this, "has_many") && in_array($obj, $this->has_many())) {
+
       }
 
-      $object_class = ucfirst($obj);
 
-      return $object_class::find($this->$attr);
+      // If the relation is belongs_to
+      if (method_exists($this, "belongs_to") && in_array($obj, $this->belongs_to())) {
+
+      }
+
+      return NULL;
 
     }
 

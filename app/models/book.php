@@ -6,13 +6,13 @@
       return ['category'];
     }
 
-    function has_many() {
-
-    }
-
-    function belongs_to() {
-
-    }
+    // function has_many() {
+    //
+    // }
+    //
+    // function belongs_to() {
+    //
+    // }
 
     // This method will reserve a Book
     public function reserve_book_by($user) {
