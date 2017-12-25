@@ -51,13 +51,33 @@ require('core/model/model.php');
 
       // If the relation is has_many
       if (method_exists($this, "has_many") && in_array($obj, $this->has_many())) {
+        $attr_class = ucfirst($obj);
+        $attr = lcfirst($class) . '_id';
 
+        // If the table has not an attribute of the called + '_id'
+        if (!$attr_class::has_attribute($attr)) {
+          throw new Exception("has_many relation in class $class does include $obj", 1);
+          return;
+        }
+
+        // Return a list of all objects
+        return $attr_class::where("$attr = ?", $this->id);
       }
 
 
       // If the relation is belongs_to
       if (method_exists($this, "belongs_to") && in_array($obj, $this->belongs_to())) {
+        $attr = lcfirst($obj) . '_id';
+        $attr_class = ucfirst($obj);
 
+        // If the table has not an attribute of the called + '_id'
+        if (!$class::has_attribute($attr)) {
+          throw new Exception("belongs_to relation in class $class does have $attr", 1);
+          return;
+        }
+
+        // Return a list of all objects
+        return $attr_class::find($this->$attr);
       }
 
       return NULL;

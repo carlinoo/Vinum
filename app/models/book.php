@@ -2,14 +2,14 @@
 
   class Book extends Application {
 
-    function has_one() {
-      return ['category'];
+    // function has_one() {
+    //   return ['category'];
+    // }
+
+    function has_many() {
+      return ['reservation'];
     }
 
-    // function has_many() {
-    //
-    // }
-    //
     // function belongs_to() {
     //
     // }
