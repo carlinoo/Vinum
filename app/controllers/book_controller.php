@@ -14,7 +14,11 @@
       // var_dump($books);
       // var_dump($books->has(Book::find(1)));
 
-      self::render('json', Book::first()->reservation);
+      $info = WebRest::CallAPI('http://wordify.cloudthon.com/english/singular/hellos');
+
+      var_dump($info);
+
+      // self::render('json', Book::first()->reservation);
     }
 
     function json() {
