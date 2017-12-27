@@ -14,7 +14,7 @@
       // var_dump($books);
       // var_dump($books->has(Book::find(1)));
 
-      self::render('json', Reservation::first()->book);
+      self::render('json', Book::first()->reservation);
     }
 
     function json() {

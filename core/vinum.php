@@ -1,5 +1,4 @@
 <?php
-require('core/model/model.php');
 
   abstract class Vinum {
 
@@ -14,16 +13,6 @@ require('core/model/model.php');
       foreach ($params as $key => $value) {
         $this->$key = $value;
 
-        // If the $key finishes in '_id', it means its an object.
-        // We create an object of the type $key taking away '_id'
-        // if (substr($key, -3) === '_id') {
-        //   $obj = substr($key, 0, -3);
-        //   $class = ucfirst($obj);
-        //
-        //   if (class_exists($class)) {
-        //     $this->$obj = $class::find($value);
-        //   }
-        // }
       }
     }
 
@@ -80,8 +69,9 @@ require('core/model/model.php');
         return $attr_class::find($this->$attr);
       }
 
-      return NULL;
+      trigger_error("Variable $obj not declared", E_USER_WARNING);
 
+      return NULL;
     }
 
 
