@@ -40,12 +40,18 @@
 
       // If the relation is has_many
       if (method_exists($this, "has_many") && in_array($obj, $this->has_many())) {
-        $attr_class = ucfirst($obj);
+
+        // Get the singular of the word $obj. i.e. $book->categories will get 'category'
+        // TODO create own singularize and pluralize functions
+        $singular_obj = WebRest::CallAPI('http://wordify.cloudthon.com/english/singular/' . $obj)->singular;
+
+        $attr_class = ucfirst($singular_obj);
+
         $attr = lcfirst($class) . '_id';
 
         // If the table has not an attribute of the called + '_id'
         if (!$attr_class::has_attribute($attr)) {
-          throw new Exception("has_many relation in class $class does include $obj", 1);
+          throw new Exception("has_many relation in class $class does include $singular_obj", 1);
           return;
         }
 
@@ -73,6 +79,9 @@
 
       return NULL;
     }
+
+
+
 
 
 

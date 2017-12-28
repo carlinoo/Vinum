@@ -7,7 +7,7 @@
     // }
 
     function has_many() {
-      return ['reservation'];
+      return ['reservations', 'categories'];
     }
 
     // function belongs_to() {

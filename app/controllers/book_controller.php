@@ -6,7 +6,7 @@
 
       $books = Book::where('id = ?', 27);
 
-      // var_dump(Book::first()->category);
+      // var_dump(Book::first()->reservations);
 
       // var_dump($books->does_exist());
       // $books->update_attributes();
@@ -14,11 +14,7 @@
       // var_dump($books);
       // var_dump($books->has(Book::find(1)));
 
-      $info = WebRest::CallAPI('http://wordify.cloudthon.com/english/singular/hellos');
-
-      var_dump($info);
-
-      // self::render('json', Book::first()->reservation);
+      self::render('json', Book::first()->reservations);
     }
 
     function json() {
