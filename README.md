@@ -109,6 +109,18 @@ The models are the classes of your applications. You will write any methods ther
 
   class Book extends Application {
 
+    function has_many() {
+      return ['categories', 'editions'];
+    }
+
+    function belongs_to() {
+      return ['user'];
+    }
+
+    function has_one() {
+      return ['author'];
+    }
+
     // method to reserve a book
     public function reserve() {
 	    $this->reserved = true;
