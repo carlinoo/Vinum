@@ -124,7 +124,7 @@ The models are the classes of your applications. You will write any methods ther
     // method to reserve a book
     public function reserve() {
 	    $this->reserved = true;
-	    $this.save_record
+	    $this.save_record();
     }
 
   }
@@ -132,6 +132,23 @@ The models are the classes of your applications. You will write any methods ther
  ?>
 ```
 All models will inherit from `Application`, which itself will inhert from `Vinum`. This is useful to give you certain functionality talked about below. If you want to add any generic methods to all models, you will do that in the `Application` model.
+
+As seen above, there are a few useful functions (has_many, belong_to and has_one). All these methods will allow the developer to call associations. They will all return an array of strings of each individual association. **has_many** returns an array of the *plural* of associations. In this case, a book has many *categories* and *editions*. **belongs_to** and **has_one** returns an array of the *singular* of the association name.
+
+Now we can do:
+
+``` php
+
+  // This will retrieve an array of objects of type 'Category' where book_id is equal to the id of the object $book
+  $book->categories;
+
+  // This will retrieve an object of type 'User', looking at the user_id on the 'Book' table
+  $book->user;
+
+  // This will retrieve an object of type 'Author' where the book_id is equal to the id of the object $book
+  $book->author;
+
+```
 
 ##### Methods
 I am going to assume there is model called `Book`. If you use the right convention talked about previously, you will get functionality like:
