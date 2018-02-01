@@ -93,7 +93,7 @@
           foreach ($route as $key => $value) {
             // If the key has a '/' before, delete it
             if ($key[0] === '/') {
-              $key[0] = '';
+              $key[0] = " ";
               $key = trim($key);
             }
 
