@@ -7,7 +7,7 @@ trait FlowingQuery {
 
 
   // This class method will return a list of objects retrieved from the database
-  public static function where() {
+  public function where() {
     // get all arguments
     $class = $this->class;
     $argv = func_get_args();
@@ -45,7 +45,7 @@ trait FlowingQuery {
 
 
   // This will retrieve all columns from a table
-  public static function get_column_names() {
+  public function get_column_names() {
     $db = DB::connect();
 
     $result = $db->prepare('DESCRIBE ' . $this->class);
@@ -129,7 +129,7 @@ trait FlowingQuery {
 
 
   // this class method will get all the objects of a table called from the child and return them
-  public static function all() {
+  public function all() {
     $class = $this->class;
     $argv = func_get_args();
 
@@ -158,7 +158,7 @@ trait FlowingQuery {
 
 
   // This method will return an object queried from the database
-  public static function find() {
+  public function find() {
     $class = $this->class;
     $argv = func_get_args();
 
@@ -179,6 +179,7 @@ trait FlowingQuery {
 
     $id = $argv[0];
 
+
     // Check that $column exists on the table
     if (!in_array($column, $class::get_column_names())) {
       return null;
@@ -191,6 +192,7 @@ trait FlowingQuery {
     $result->execute();
 
     $result = $result->fetch(PDO::FETCH_ASSOC);
+
 
     // If the is no result
     if (!$result) {
@@ -205,7 +207,7 @@ trait FlowingQuery {
 
 
   // This function will get all the objects from the database selecting only the fields passed
-  public static function select() {
+  public function select() {
 
     $class = $this->class;
     $argv = func_get_args();
@@ -259,7 +261,7 @@ trait FlowingQuery {
 
 
   // This class method will return the first item of a table sorted by id
-  public static function first() {
+  public function first() {
     $class = $this->class;
     $argv = func_get_args();
 
@@ -295,7 +297,7 @@ trait FlowingQuery {
 
 
   // This method will return the last item of a table sorted by id
-  public static function last() {
+  public function last() {
     $class = $this->class;
     $argv = func_get_args();
 
@@ -453,7 +455,7 @@ trait FlowingQuery {
     $argv = func_get_args();
     $attribute = $argv[0];
 
-    $attributes = $this->class::get_column_names();
+    $attributes = $class::get_column_names();
 
     foreach ($attributes as $value) {
       if ($value == $attribute) {

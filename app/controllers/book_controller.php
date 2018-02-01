@@ -4,14 +4,17 @@
 
     function index() {
 
-      $books = Book::find(1);
+      $books = Book::where('id = ?', 27);
 
+      // var_dump(Book::first()->reservations);
+
+      // var_dump($books->does_exist());
       // $books->update_attributes();
       // $books = Book::where('reserved = false');
       // var_dump($books);
       // var_dump($books->has(Book::find(1)));
 
-      self::render('json', $books);
+      self::render('json', Book::first()->reservations);
     }
 
     function json() {

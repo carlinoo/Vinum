@@ -1,10 +1,10 @@
 <?php
-require('core/model/model.php');
 
   abstract class Vinum {
 
     // This constructor all the Models will use. It takes an hash and it
     public function __construct($params = null) {
+
       if ($params == null) {
         return;
       }
@@ -13,18 +13,73 @@ require('core/model/model.php');
       foreach ($params as $key => $value) {
         $this->$key = $value;
 
-        // If the $key finishes in '_id', it means its an object.
-        // We create an object of the type $key taking away '_id'
-        if (substr($key, -3) === '_id') {
-          $obj = substr($key, 0, -3);
-          $class = ucfirst($obj);
-
-          if (class_exists($class)) {
-            $this->$obj = $class::find($value);
-          }
-        }
       }
     }
+
+
+
+    // This will be called every time an attribute of an object is called if that object is does not have that atribute
+    public function __get($obj) {
+      $class = get_called_class();
+
+      // If the relation is has_one
+      if (method_exists($this, "has_one") && in_array($obj, $this->has_one())) {
+        $attr = $obj . '_id';
+
+        // If the object does not have attribute ending in '_id'
+        if (!property_exists($this, $attr)) {
+          throw new Exception("$class does not have a attribute $attr", 1);
+          return;
+        }
+
+        $object_class = ucfirst($obj);
+
+        return $object_class::find($this->$attr);
+      }
+
+
+      // If the relation is has_many
+      if (method_exists($this, "has_many") && in_array($obj, $this->has_many())) {
+
+        // Get the singular of the word $obj. i.e. $book->categories will get 'category'
+        // TODO create own singularize and pluralize functions
+        $singular_obj = WebRest::CallAPI('http://wordify.cloudthon.com/english/singular/' . $obj)->singular;
+
+        $attr_class = ucfirst($singular_obj);
+
+        $attr = lcfirst($class) . '_id';
+
+        // If the table has not an attribute of the called + '_id'
+        if (!$attr_class::has_attribute($attr)) {
+          throw new Exception("has_many relation in class $class does include $singular_obj", 1);
+          return;
+        }
+
+        // Return a list of all objects
+        return $attr_class::where("$attr = ?", $this->id);
+      }
+
+
+      // If the relation is belongs_to
+      if (method_exists($this, "belongs_to") && in_array($obj, $this->belongs_to())) {
+        $attr = lcfirst($obj) . '_id';
+        $attr_class = ucfirst($obj);
+
+        // If the table has not an attribute of the called + '_id'
+        if (!$class::has_attribute($attr)) {
+          throw new Exception("belongs_to relation in class $class does have $attr", 1);
+          return;
+        }
+
+        // Return a list of all objects
+        return $attr_class::find($this->$attr);
+      }
+
+      trigger_error("Variable $obj not declared", E_USER_WARNING);
+
+      return NULL;
+    }
+
 
 
 
