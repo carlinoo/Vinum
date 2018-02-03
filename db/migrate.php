@@ -2,10 +2,7 @@
   // This file will be called from 'rails db:migrate' and it will migrate the database
   require "config/variables.php";
   require_once('config/connection.php');
-  require_once('../core/model/migration.php');
-
-  m = new Migration();
-
+  require_once('core/model/migration.php');
 
 
   $db = Db::connect();
