@@ -7,8 +7,12 @@
   // require_once('app/views/layout/layout.php');
 
   // require_once('core/model/migration.php');
+  //
+  // Migration::create_table('user', function($table) {
+  //   $table->add_column('first_name', 'varchar(100)', 'not null');
+  // });
 
-  // Migration::create_table('user');
+  // Migration::drop_table('user');
 
 ?>
 <?php initiate(); ?>
