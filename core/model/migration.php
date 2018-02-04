@@ -22,6 +22,14 @@
     }
 
 
+    // To alter a table
+    static public function alter_table($table_name, $callback) {
+      $table = new Table($table_name);
+      
+      $callback($table);
+    }
+
+
 
     // To delete a table
     static public function drop_table($table_name) {
@@ -32,11 +40,23 @@
     }
 
 
+
+
     // Add a column to a table
     static function add_column_to($table_name, $col_name, $data_type, $operations) {
       $db = DB::connect();
 
       $statement = $db->prepare("ALTER TABLE $table_name ADD COLUMN $col_name $data_type $operations");
+
+      $statement->execute();
+    }
+
+
+    // Drop a column from a table
+    static function drop_column_from($table_name, $col_name) {
+      $db = DB::connect();
+
+      $statement = $db->prepare("ALTER TABLE $table_name DROP COLUMN $col_name");
 
       $statement->execute();
     }
