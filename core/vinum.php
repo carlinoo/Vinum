@@ -43,9 +43,10 @@
 
         // Get the singular of the word $obj. i.e. $book->categories will get 'category'
         // TODO create own singularize and pluralize functions
-        $singular_obj = WebRest::CallAPI('http://wordify.cloudthon.com/english/singular/' . $obj)->singular;
+        // $singular_obj = WebRest::CallAPI('http://wordify.cloudthon.com/english/singular/' . $obj)->singular;
 
-        $attr_class = ucfirst($singular_obj);
+        // $attr_class = ucfirst($singular_obj);
+        $attr_class = ucfirst($obj);
 
         $attr = lcfirst($class) . '_id';
 

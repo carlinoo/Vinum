@@ -4,7 +4,7 @@
 
     function index() {
 
-      $books = Book::where('id = ?', 27);
+      $books = Book::where('id = ?', 1);
 
       // var_dump(Book::first()->reservations);
 
@@ -14,7 +14,7 @@
       // var_dump($books);
       // var_dump($books->has(Book::find(1)));
 
-      self::render('json', Book::first()->reservations);
+      self::render('json', Book::first());
     }
 
     function json() {
