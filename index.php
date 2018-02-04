@@ -6,5 +6,9 @@
   // require "db/migrate.php";
   // require_once('app/views/layout/layout.php');
 
+  // require_once('core/model/migration.php');
+
+  // Migration::create_table('user');
+
 ?>
 <?php initiate(); ?>
