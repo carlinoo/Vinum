@@ -8,12 +8,12 @@
 
     function has_many() {
       return ['reservations', 'categories'];
-      // return ['reservation', 'category'];
     }
 
     // function belongs_to() {
     //
     // }
+
 
     // This method will reserve a Book
     public function reserve_book_by($user) {

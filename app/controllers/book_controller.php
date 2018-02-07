@@ -14,7 +14,7 @@
       // var_dump($books);
       // var_dump($books->has(Book::find(1)));
 
-      self::render('json', Book::first());
+      self::render('json', Book::first()->categories);
     }
 
     function json() {

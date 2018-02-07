@@ -42,21 +42,41 @@
       if (method_exists($this, "has_many") && in_array($obj, $this->has_many())) {
 
         // Get the singular of the word $obj. i.e. $book->categories will get 'category'
-        // TODO create own singularize and pluralize functions
         $singular_obj = singularize($obj);
 
         $attr_class = ucfirst($singular_obj);
 
         $attr = lcfirst($class) . '_id';
 
-        // If the table has not an attribute of the called + '_id'
-        if (!$attr_class::has_attribute($attr)) {
-          throw new Exception("has_many relation in class $class does include $singular_obj", 1);
-          return;
+        // If the table has an attribute of the called + '_id'
+        if ($attr_class::has_attribute($attr)) {
+          // Return a list of all objects
+          return $attr_class::where("$attr = ?", $this->id);
         }
 
-        // Return a list of all objects
-        return $attr_class::where("$attr = ?", $this->id);
+        // There might be a many_to_many, so we need to check two tables:
+        // book_category and category_book
+        $table1 = ucfirst($singular_obj) . "_" . $class;
+        $table2 = $class . "_" . ucfirst($singular_obj);
+
+        // TODO check if the model exist and if it exist on the DB
+        
+        // If the first combination has the attributes
+        if ($table1::does_exist() && $table1::has_attribute($attr) && $table1::has_attribute($singular_obj . '_id')) {
+          return $table1::where("$attr = ?", $this->id);
+        }
+
+        // If the second combination has the attributes
+        if ($table2::does_exist() && $table2::has_attribute($attr) && $table2::has_attribute($singular_obj . '_id')) {
+          return $table2::where("$attr = ?", $this->id);
+        }
+
+
+        // If there isnt any coincidence
+        throw new Exception("has_many relation in class $class does include $singular_obj", 1);
+        return;
+
+
       }
 
 
