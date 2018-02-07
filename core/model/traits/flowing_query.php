@@ -43,6 +43,24 @@ trait FlowingQuery {
 
 
 
+  // Will return true or false weather the model exists on the DB or not
+  static function in_database() {
+    $class = $this->class;
+
+    $db = DB::connect();
+
+    try {
+      $result = $db->prepare("SELECT * FROM $class")->execute();
+    } catch (Exception $e) {
+      return false;
+    }
+
+    return true;
+  }
+
+
+
+
 
   // This will retrieve all columns from a table
   public function get_column_names() {

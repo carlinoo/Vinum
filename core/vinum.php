@@ -59,15 +59,14 @@
         $table1 = ucfirst($singular_obj) . "_" . $class;
         $table2 = $class . "_" . ucfirst($singular_obj);
 
-        // TODO check if the model exist and if it exist on the DB
-        
+
         // If the first combination has the attributes
-        if ($table1::does_exist() && $table1::has_attribute($attr) && $table1::has_attribute($singular_obj . '_id')) {
+        if (class_exists($table1) && $table1::in_database() && $table1::has_attribute($attr) && $table1::has_attribute($singular_obj . '_id')) {
           return $table1::where("$attr = ?", $this->id);
         }
 
         // If the second combination has the attributes
-        if ($table2::does_exist() && $table2::has_attribute($attr) && $table2::has_attribute($singular_obj . '_id')) {
+        if (class_exists($table2) && $table2::in_database() && $table2::has_attribute($attr) && $table2::has_attribute($singular_obj . '_id')) {
           return $table2::where("$attr = ?", $this->id);
         }
 
