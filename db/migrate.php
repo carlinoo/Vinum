@@ -8,7 +8,7 @@
   $db = Db::connect();
 
     // Check if database exists
-  if (!isset($_ENV['database_name']) && $_ENV['database_name'] != '') {
+  if (!isset($_ENV['database_name']) || $_ENV['database_name'] == '') {
     echo "Please go to config/variables.php and create a database name";
     return;
   }
@@ -59,6 +59,6 @@
       return;
     }
 
-    echo "\n\nThe migration has been successful\n\n";
+    echo "\nThe migration has been successful\n\n";
     return;
  ?>

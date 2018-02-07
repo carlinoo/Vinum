@@ -3,3 +3,4 @@ config/variables.php
 app/.htaccess
 bin/vinum
 bin/vinum.o
+bin/vinum.exe
