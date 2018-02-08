@@ -24,8 +24,28 @@
     }
 
 
+
+    // To create a many to many table
+    static public function create_join_table($_table1, $_table2, $callback = null) {
+      $table1 = ucfirst($_table1);
+      $table2 = ucfirst($_table2);
+      $joined_table = $table1 . '_' . $table2;
+
+      $db = DB::connect();
+
+      $statement = $db->prepare("CREATE TABLE " . $joined_table . "(id int auto_increment primary key, " . $_table1 . "_id int not null, " . $_table2 . "_id int not null)");
+      $statement->execute();
+
+      $table = new Table($joined_table);
+
+      $callback != null && $callback($table);
+    }
+
+
     // To alter a table
     static public function alter_table($table_name, $callback) {
+      $table_name = ucfirst($table_name);
+
       $table = new Table($table_name);
 
       $callback($table);
@@ -36,11 +56,11 @@
     // To delete a table
     static public function drop_table($table_name) {
 
-      $table = ucfirst($table_name);
+      $table_name = ucfirst($table_name);
 
       $db = DB::connect();
 
-      $run = $db->prepare("DROP TABLE $table");
+      $run = $db->prepare("DROP TABLE $table_name");
       $run->execute();
     }
 

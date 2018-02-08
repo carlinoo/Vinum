@@ -20,9 +20,9 @@
 
     // Change the column name to a table
     public function change_column($original_name, $new_name, $data_type, $operations) {
-      $db = DB:connect();
+      $db = DB::connect();
 
-      $statement = $db->prepare("ALTER TABLE $this->table CHANGE  $original_name $new_name $data_type $operations");
+      $statement = $db->prepare("ALTER TABLE $this->table_name CHANGE $original_name $new_name $data_type $operations");
 
       $statement->execute();
     }
@@ -36,6 +36,8 @@
 
       $statement->execute();
     }
+
+
 
   }
 
