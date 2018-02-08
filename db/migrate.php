@@ -7,6 +7,10 @@
 
   $db = Db::connect();
 
+  Migration::create_table('dog', function($table) {
+    $table->add_column('age', 'integer', 'not null');
+  });
+
     // Check if database exists
   if (!isset($_ENV['database_name']) || $_ENV['database_name'] == '') {
     echo "Please go to config/variables.php and create a database name";
