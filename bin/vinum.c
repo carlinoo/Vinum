@@ -241,7 +241,7 @@ void generate_migration(char *name) {
   strcpy(filename, str);
   strcat(filename, "-");
   strcat(filename, name);
-  strcat(filename, "-migration.sql");
+  strcat(filename, "-migration.php");
   strcat(file_location, filename);
 
   printf("%s\n", file_location);
@@ -265,15 +265,17 @@ void generate_migration(char *name) {
   }
 
   // Add a comment to the file and close it
-  fputs("/* This migration needs to contain all the SQL statements of the changes you want to do */", fp);
+  fputs(" <?php \n\n\t// This migration needs to contain all the Migration statements of the changes you want to do.\n\t// To learn all you can do in migrations, go to https://github.com/carlinoo/Vinum \n\n \t// To create a table: \n\tMigration::create_table('table_name', function($table) {\n\n\t});\n\n ?>", fp);
   fclose(fp);
 
 
   // Display the information of the file we just created
   print_vinum();
-  printf("A migration file has been created: '%s%s%s'. Add your SQL statements and then do '%svinum db:migrate%s' to migrate the database.\n\n", KYELLOW, file_location, KNORMAL, KYELLOW, KNORMAL);
+  printf("A migration file has been created: '%s%s%s'. Add your Migration statements and then do '%svinum db:migrate%s' to migrate the database.\n\n", KYELLOW, file_location, KNORMAL, KYELLOW, KNORMAL);
 
 }
+
+
 
 
 
@@ -282,12 +284,7 @@ void generate_controller(char *name) {
   FILE *fp;
   char file_location[400] = MODEL_FOLDER;
   char controller_name[300];
-  //
-  // // First capital letter
-  // strcpy(controller_name, toupper(name[0]));
-  //
-  // // add the rest of letters
-  // // TODO not finished
+
 
   strcat(file_location, name);
   strcat(file_location, "_controller.php");
@@ -311,23 +308,23 @@ void generate_controller(char *name) {
   }
 
   // Add a comment to the file and close it
-  fputs("<?php\n\nclass ", fp);
+  fputs("<?php\n\n\tclass ClassnameController extends ApplicationController {\n\n\n\n\t}", fp);
   fclose(fp);
 
 
   // Display the information of the file we just created
   print_vinum();
-  printf("A migration file has been created: '%s%s%s'. Add your SQL statements and then do '%svinum db:migrate%s' to migrate the database.\n\n", KYELLOW, file_location, KNORMAL, KYELLOW, KNORMAL);
+  printf("A controller file has been created: '%s%s%s'.\n\n", KYELLOW, file_location, KNORMAL);
   // fp = fopen(concat)
 }
 
 
 // This will generate a model
 void generate_model(char *name) {
-  FILE fp;
-  char *filename = strcat(name, "-migration.sql");
-
-  printf("%s\n", filename);
+  // FILE fp;
+  // char *filename = strcat(name, "-migration.sql");
+  //
+  // printf("%s\n", filename);
 
   // fp = fopen(concat)
 }
@@ -336,10 +333,10 @@ void generate_model(char *name) {
 
 // This will generate a resource
 void generate_resource(char *name) {
-  FILE fp;
-  char *filename = strcat(name, "-migration.sql");
-
-  printf("%s\n", filename);
+  // FILE fp;
+  // char *filename = strcat(name, "-migration.sql");
+  //
+  // printf("%s\n", filename);
 
   // fp = fopen(concat)
 }

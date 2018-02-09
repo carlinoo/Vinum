@@ -47,8 +47,8 @@
     // We try to execute all migrations in order of the time they were created
     try {
       foreach ($mig_files as $file) {
-        $migr = $db->prepare(file_get_contents("db/migrations/" . $file));
-        $migr->execute();
+        // $migr = $db->prepare(file_get_contents("db/migrations/" . $file));
+        require_once("db/migrations/" . $file);
         $migr = $db->prepare("INSERT INTO vinum_info (migration_file) VALUES (:file)");
         $migr->bindParam(':file', $file);
         $migr->execute();
