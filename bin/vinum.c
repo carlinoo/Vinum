@@ -157,9 +157,7 @@ void display_routes() {
       return;
     }
 
-    if (c == '{') {
-
-    }
+    printf("%c", c);
   }
 }
 
@@ -239,9 +237,9 @@ void generate_migration(char *name) {
 
   // Get the name file, add "-migration.sql" to the end of it, and add it to the location of it
   strcpy(filename, str);
-  strcat(filename, "-");
+  strcat(filename, "_");
   strcat(filename, name);
-  strcat(filename, "-migration.php");
+  strcat(filename, "_migration.php");
   strcat(file_location, filename);
 
   printf("%s\n", file_location);
@@ -282,7 +280,7 @@ void generate_migration(char *name) {
 // This will generate a controller
 void generate_controller(char *name) {
   FILE *fp;
-  char file_location[400] = MODEL_FOLDER;
+  char file_location[400] = CONTROLLER_FOLDER;
   char controller_name[300];
 
 
@@ -321,24 +319,52 @@ void generate_controller(char *name) {
 
 // This will generate a model
 void generate_model(char *name) {
-  // FILE fp;
-  // char *filename = strcat(name, "-migration.sql");
-  //
-  // printf("%s\n", filename);
+  FILE *fp;
+  char file_location[400] = MODEL_FOLDER;
+  char controller_name[300];
 
-  // fp = fopen(concat)
+
+  strcat(file_location, name);
+  strcat(file_location, ".php");
+
+  fp = fopen(file_location, "r");
+
+  // If the file does exist, then output an error
+  if (fp != NULL) {
+    printf("\n%sERROR:%s A model with the name of '%s%s%s' already exists.\n\n", KRED, KNORMAL, KYELLOW, name, KNORMAL);
+    return;
+  }
+
+
+  // Create the file
+  fp = fopen(file_location, "a+");
+
+  // If there has been a problem
+  if (fp == NULL) {
+    printf("\n%sERROR:%s There's has been an error creating your model file.\n\n", KRED, KNORMAL);
+    return;
+  }
+
+  // Add a comment to the file and close it
+  fputs("<?php\n\n\tclass Classname extends Application {\n\n\n\n\t}", fp);
+  fclose(fp);
+
+
+  // Display the information of the file we just created
+  print_vinum();
+  printf("A model file has been created: '%s%s%s'.\n\n", KYELLOW, file_location, KNORMAL);
 }
 
 
 
 // This will generate a resource
 void generate_resource(char *name) {
-  // FILE fp;
-  // char *filename = strcat(name, "-migration.sql");
-  //
-  // printf("%s\n", filename);
 
-  // fp = fopen(concat)
+  char migration_prefix[150] = "create_";
+
+  generate_model(name);
+  generate_controller(name);
+  generate_migration(strcat(migration_prefix, name));
 }
 
 
@@ -360,13 +386,5 @@ void migrate_database() {
 
 
 void initilize() {
-  char *cmd = "php";
-  char *argv[3];
-  argv[0] = "php";
-  argv[1] = "db/migrate.php";
-  argv[2] = NULL;
-
-  execvp(cmd, argv);
-
-  printf("\n\n");
+  printf("This feature is not available yet\n\n");
 }
